@@ -206,6 +206,11 @@ export default function App() {
       logo: '/img/sancor.png', 
       grua: '0800-777-4643',
       tag: 'Líder en respuesta de siniestros'
+    },
+    {
+      nombre: 'El Norte Seguros',
+      logo: '/img/elnorte.png',
+      tag: 'Protección y respaldo para tu seguro'
     }
   ];
 
@@ -288,7 +293,7 @@ export default function App() {
                     <ShieldCheck className="w-5 h-5" />
                   </div>
                   <span className="text-xs font-semibold text-slate-800 leading-snug">
-                    4 Aseguradoras líderes para comparar
+                    5 Aseguradoras líderes para comparar
                   </span>
                 </div>
 
@@ -490,7 +495,7 @@ export default function App() {
             <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-slate-400 mb-6">
               Respaldo oficial en las aseguradoras más sólidas del mercado
             </p>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
               {companias.map((comp) => (
                 <div
                   key={comp.nombre}
@@ -660,7 +665,7 @@ export default function App() {
                   ¿Sentís que tu seguro aumenta sin control o contrataste en un banco?
                 </h3>
                 <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-                  Los bancos y concesionarias suelen recargar comisiones y dejarte sin asesoramiento cuando tenés un siniestro. Mandanos una foto del frente de tu póliza actual: verificamos que tu suma asegurada sea la correcta y te conseguimos una propuesta superadora en <strong>Galicia, Mercantil Andina, Provincia o Sancor</strong>.
+                  Los bancos y concesionarias suelen recargar comisiones y dejarte sin asesoramiento cuando tenés un siniestro. Mandanos una foto del frente de tu póliza actual: verificamos que tu suma asegurada sea la correcta y te conseguimos una propuesta superadora en <strong>Galicia, Mercantil Andina, Provincia, Sancor o El Norte</strong>.
                 </p>
               </div>
               <div className="lg:col-span-4 flex lg:justify-end">
@@ -740,20 +745,26 @@ export default function App() {
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
                 {companias.map((c) => (
                   <div key={c.nombre} className="bg-[#F5F2EB] p-6 rounded-2xl border border-stone-200 flex flex-col justify-between items-center text-center gap-4">
                     <div>
                       <span className="font-serif-brand font-bold text-lg text-slate-900 block">{c.nombre}</span>
                       <span className="text-xs text-slate-500">Asistencia Mecánica 24 hs</span>
                     </div>
-                    <a
-                      href={`tel:${c.grua.replace(/-/g, '')}`}
-                      className="w-full bg-[#21699B] hover:bg-[#19527A] text-white font-bold py-3 px-4 rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-xs"
-                    >
-                      <PhoneCall className="w-4 h-4" />
-                      {c.grua}
-                    </a>
+                    {c.grua ? (
+                      <a
+                        href={`tel:${c.grua.replace(/-/g, '')}`}
+                        className="w-full bg-[#21699B] hover:bg-[#19527A] text-white font-bold py-3 px-4 rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-xs"
+                      >
+                        <PhoneCall className="w-4 h-4" />
+                        {c.grua}
+                      </a>
+                    ) : (
+                      <span className="w-full bg-stone-200 text-slate-600 font-semibold py-3 px-4 rounded-xl text-xs">
+                        Consultá tu póliza
+                      </span>
+                    )}
                   </div>
                 ))}
               </div>
