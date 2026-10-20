@@ -210,6 +210,7 @@ export default function App() {
     {
       nombre: 'El Norte Seguros',
       logo: '/img/elnorte.png',
+      grua: '0800-888-0200',
       tag: 'Protección y respaldo para tu seguro'
     }
   ];
@@ -229,7 +230,9 @@ export default function App() {
         <div className="max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-2">
           <span className="flex items-center gap-2 font-medium">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            Productor Asesor de Seguros Matriculado — Atención directa sin intermediarios
+            <span>
+              <strong className="text-white">Victor Marcelo Young</strong> · Productor Asesor de Seguros (Matrícula SSN 68835)
+            </span>
           </span>
           <a 
             href="#emergencia" 
@@ -302,7 +305,7 @@ export default function App() {
                     <UserCheck className="w-5 h-5" />
                   </div>
                   <span className="text-xs font-semibold text-slate-800 leading-snug">
-                    Trato directo con tu productor asesor
+                    Trato directo con Marcelo Young (MP 68835)
                   </span>
                 </div>
 
@@ -778,12 +781,15 @@ export default function App() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-6">
           <div className="flex flex-col items-center sm:items-start gap-2">
             <BrandLogo darkBg={true} />
-            <p className="mt-2 text-slate-400">
-              Productor Asesor de Seguros — Atención personalizada.
+            <p className="mt-2 text-slate-300 font-medium">
+              Victor Marcelo Young — Productor Asesor de Seguros
+            </p>
+            <p className="text-slate-400">
+              Atención personalizada y gestión integral de siniestros.
             </p>
           </div>
           <div className="text-center sm:text-right space-y-1.5">
-            <p className="text-slate-200 font-semibold text-sm">N° de Inscripción SSN: [Completar Matrícula]</p>
+            <p className="text-slate-200 font-semibold text-sm">Matrícula SSN N° 68835</p>
             <p>Superintendencia de Seguros de la Nación — Órgano de Control de la Actividad Aseguradora</p>
             <p className="text-slate-500">0800-666-8400 — www.argentina.gob.ar/ssn</p>
           </div>
