@@ -1,11 +1,13 @@
-import { Car, Bike, MessageCircle, FileText } from 'lucide-react';
+import { useRef } from 'react';
+import { Car, Bike, MessageCircle, FileText, X } from 'lucide-react';
 import SelectorVehiculo from './SelectorVehiculo';
 import {
   MARCAS_AUTOS_AR,
   MARCAS_MOTOS_AR,
   ANIO_ACTUAL,
   ANIO_MINIMO_LISTA,
-  ANIOS_ANTERIORES
+  ANIOS_ANTERIORES,
+  LOCALIDADES_CORDOBA
 } from '../../data/vehiculos';
 import { COBERTURAS_POR_RAMO } from '../../data/coberturas';
 import { armarMensajeCotizacion, linkWhatsApp } from '../../utils/whatsapp';
@@ -17,6 +19,8 @@ export default function Cotizador({
   setFormData,
   marcaSelectRef
 }) {
+  const localidadInputRef = useRef(null);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const mensaje = armarMensajeCotizacion(ramo, formData);
@@ -81,14 +85,14 @@ export default function Cotizador({
             marcaSelectRef={marcaSelectRef}
             labelMarca="Marca de la moto"
             placeholderMarca="Seleccioná la marca..."
-            placeholderOtraMarca="Escribí la marca (Ej: KTM, Suzuki, Beta, TVS...)"
-            placeholderModeloDirecto="Escribí el modelo (Ej: Duke 200, AX 100, RTR 200...)"
+            placeholderOtraMarca="Escribí la marca (Ej: Benelli, Royal Enfield, KTM...)"
+            placeholderModeloDirecto="Escribí el modelo (Ej: TNT 15, Classic 350, Duke 200...)"
           />
         )}
 
-        {/* Fila compacta en 2 columnas: Año + Localidad */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
+        {/* Fila compacta en 1 sola línea también en celular: Año (5 col) + Localidad (7 col) */}
+        <div className="grid grid-cols-12 gap-2.5 sm:gap-3">
+          <div className="col-span-5">
             <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1 ml-1">
               Año
             </label>
@@ -97,12 +101,12 @@ export default function Cotizador({
               aria-label="Año del vehículo"
               value={formData.anio}
               onChange={(e) => setFormData({ ...formData, anio: e.target.value })}
-              className={`w-full px-3.5 py-3 rounded-xl border border-slate-300 bg-slate-50/50 focus:bg-white focus:border-[#21699B] focus:ring-3 focus:ring-[#21699B]/15 outline-none transition text-sm ${
+              className={`w-full px-3 py-3 rounded-xl border border-slate-300 bg-slate-50/50 focus:bg-white focus:border-[#21699B] focus:ring-3 focus:ring-[#21699B]/15 outline-none transition text-base sm:text-sm ${
                 formData.anio ? 'text-slate-900 font-medium' : 'text-slate-500'
               }`}
             >
               <option value="" disabled>
-                Elegí el año...
+                Año...
               </option>
               <option value={`${ANIO_ACTUAL} / 0km`} className="text-slate-900 font-semibold">
                 {ANIO_ACTUAL} (0km)
@@ -113,24 +117,46 @@ export default function Cotizador({
                 </option>
               ))}
               <option value="OTRO" className="text-[#21699B] font-bold">
-                ➕ Anterior a {ANIO_MINIMO_LISTA}...
+                ➕ Ant. a {ANIO_MINIMO_LISTA}
               </option>
             </select>
           </div>
 
-          <div>
+          <div className="col-span-7">
             <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1 ml-1">
               Localidad
             </label>
-            <input
-              type="text"
-              required
-              aria-label="Localidad"
-              placeholder="Ej: Córdoba Capital"
-              value={formData.localidad}
-              onChange={(e) => setFormData({ ...formData, localidad: e.target.value })}
-              className="w-full px-3.5 py-3 rounded-xl border border-slate-300 bg-slate-50/50 focus:bg-white focus:border-[#21699B] focus:ring-3 focus:ring-[#21699B]/15 outline-none transition text-sm text-slate-900 placeholder:text-slate-500"
-            />
+            <div className="relative">
+              <input
+                ref={localidadInputRef}
+                type="text"
+                required
+                list="localidades-cordoba"
+                aria-label="Localidad"
+                placeholder="Elegí o escribí..."
+                value={formData.localidad}
+                onChange={(e) => setFormData({ ...formData, localidad: e.target.value })}
+                className="w-full pl-3.5 pr-8 py-3 rounded-xl border border-slate-300 bg-slate-50/50 focus:bg-white focus:border-[#21699B] focus:ring-3 focus:ring-[#21699B]/15 outline-none transition text-base sm:text-sm text-slate-900 placeholder:text-slate-500"
+              />
+              {formData.localidad && (
+                <button
+                  type="button"
+                  aria-label="Cambiar localidad"
+                  onClick={() => {
+                    setFormData({ ...formData, localidad: '' });
+                    setTimeout(() => localidadInputRef.current?.focus(), 20);
+                  }}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition cursor-pointer"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+              <datalist id="localidades-cordoba">
+                {LOCALIDADES_CORDOBA.map((loc) => (
+                  <option key={loc} value={loc} />
+                ))}
+              </datalist>
+            </div>
           </div>
         </div>
 
@@ -145,7 +171,7 @@ export default function Cotizador({
               placeholder="Escribí el año del vehículo (Ej: 1992)"
               value={formData.otroAnio}
               onChange={(e) => setFormData({ ...formData, otroAnio: e.target.value })}
-              className="w-full px-4 py-3 rounded-xl border border-[#21699B] bg-white focus:ring-3 focus:ring-[#21699B]/15 outline-none transition text-sm text-slate-900 placeholder:text-slate-400"
+              className="w-full px-4 py-3 rounded-xl border border-[#21699B] bg-white focus:ring-3 focus:ring-[#21699B]/15 outline-none transition text-base sm:text-sm text-slate-900 placeholder:text-slate-400"
             />
           </div>
         )}
@@ -209,7 +235,7 @@ export default function Cotizador({
             aria-label="Cobertura"
             value={formData.cobertura}
             onChange={(e) => setFormData({ ...formData, cobertura: e.target.value })}
-            className="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50/50 focus:bg-white focus:border-[#21699B] focus:ring-3 focus:ring-[#21699B]/15 outline-none transition text-sm text-slate-800 font-medium"
+            className="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50/50 focus:bg-white focus:border-[#21699B] focus:ring-3 focus:ring-[#21699B]/15 outline-none transition text-base sm:text-sm text-slate-800 font-medium"
           >
             {COBERTURAS_POR_RAMO[ramo].map((plan) => (
               <option key={plan.valor} value={plan.valor}>

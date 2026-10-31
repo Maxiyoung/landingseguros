@@ -316,162 +316,188 @@ export const MARCAS_MOTOS_AR = [
   {
     nombre: 'Honda',
     modelos: [
-      'CB 125F Twister',
-      'CB 250 Twister',
-      'CB 300F Twister',
-      'CG 150 Titan',
-      'GLH 150 Gaucha',
-      'Navi 110',
-      'PCX 160',
-      'Tornado XR 250',
       'Wave 110S',
-      'XR 150L',
-      'XR 190L',
-      'XRE 300'
-    ]
-  },
-  {
-    nombre: 'Yamaha',
-    modelos: [
-      'Crypton 110',
-      'FZ-S FI 150 / FZ16',
-      'FZ25 250',
-      'MT-03',
-      'NMAX 155',
-      'XTZ 125',
-      'XTZ 250',
-      'YBR 125 (ED / Z)'
-    ]
-  },
-  {
-    nombre: 'Motomel',
-    modelos: [
-      'Blitz 110 (Base / Full / Tunning)',
-      'CG 150 Serie 2',
-      'DLX 110',
-      'Sirius 190',
-      'Skua 150 (V6 / Silver)',
-      'Skua 250',
-      'Strato Euro 150',
-      'XMM 250'
-    ]
-  },
-  {
-    nombre: 'Corven',
-    modelos: [
-      'Energy 110 (Base / Full)',
-      'Hunter 150',
-      'Mirage 110',
-      'Touring 250',
-      'Triax 150',
-      'Triax 200 / 250'
-    ]
-  },
-  {
-    nombre: 'Zanella',
-    modelos: [
-      'Ceccato 150',
-      'Hot 90',
-      'Patagonian Eagle 150 / 250',
-      'RX 150',
-      'Sapucai 150',
-      'Sol 110',
-      'Styler 150 Cruiser',
-      'ZB 110 (LT / RT)',
-      'ZR 150 / ZR 250'
+      'Navi 110',
+      'CB 125 F Twister',
+      'GLH 150 (Gaucha)',
+      'CG 150 Titan / New Titan',
+      'XR 150 L',
+      'XR 190 L',
+      'CB 250 Twister',
+      'XR 250 Tornado'
     ]
   },
   {
     nombre: 'Gilera',
     modelos: [
-      'AC1 / AC4',
-      'Piccola 150',
+      'Smash 110 (Base / Full / Tunning)',
+      'Smash X 125',
+      'VC 150',
       'Sahel 150',
-      'Smash 110 (Full / Tunning / X)',
-      'SMX 200 / 250',
-      'VC 150'
-    ]
-  },
-  {
-    nombre: 'Bajaj (Rouser)',
-    modelos: [
-      'Boxer 150',
-      'Dominar 250',
-      'Dominar 400',
-      'Rouser NS 125',
-      'Rouser NS 160',
-      'Rouser NS 200 (FI / ABS)',
-      'Rouser RS 200'
+      'Piccola 150 (Scooter)',
+      'AC1 150',
+      'VC 200R',
+      'SMX 200 / SMX 250'
     ]
   },
   {
     nombre: 'Keller',
     modelos: [
-      'Crono Classic 110',
+      'Crono Classic 110 (KN110-8)',
+      'Crono Full 110 / Tunning',
+      'Stratus 150',
       'Miracle 150',
       'Miracle 200',
-      'Stratus 150'
+      'Tracker 200',
+      'Xtreme 250'
+    ]
+  },
+  {
+    nombre: 'Motomel',
+    modelos: [
+      'Blitz 110 (Base / V8 / Full / Tunning)',
+      'DLX 110',
+      'Max 110 (Dax)',
+      'S2 150',
+      'CX 150',
+      'Skua 150 (Base / V6 / Silver)',
+      'Strato Euro 150 / Alpino 150',
+      'Sirius 190',
+      'SR 200',
+      'Skua 250'
+    ]
+  },
+  {
+    nombre: 'Corven',
+    modelos: [
+      'Energy 110 (Base / R2 / Full / Tunning)',
+      'Mirage 110',
+      'Expert 150 (Scooter)',
+      'Hunter 150',
+      'Triax 150 (R2 / R3)',
+      'Triax 200',
+      'Triax 250 Touring'
+    ]
+  },
+  {
+    nombre: 'Zanella',
+    modelos: [
+      'Hot 90',
+      'Sol 110',
+      'ZB 110 (LT / RT / Full)',
+      'Due 110',
+      'RX 150 Z7 / RX 150',
+      'Sapucai 150',
+      'ZR 150 OHC',
+      'Ceccato 60/150',
+      'Styler 150 (Scooter)',
+      'Patagonian Eagle 150',
+      'RX 200',
+      'ZR 200 / ZR 250'
+    ]
+  },
+  {
+    nombre: 'Mondial',
+    modelos: [
+      'Dax 70',
+      'LD 110 Max (RT / AD)',
+      'RD 150',
+      'TD 150 L',
+      'MD 150',
+      'W 150 Cafe Racer',
+      'HD 150 / HD 250',
+      'TD 250'
     ]
   },
   {
     nombre: 'Guerrero',
     modelos: [
       'Econo G90',
-      'G110 Trip (Base / Full)',
-      'GXR 200 / 250',
-      'Urban 150'
+      'G110 Trip (Base / Full / Tunning)',
+      'G110 Dax',
+      'GC 150 Urban',
+      'GMX 150',
+      'GXL 150',
+      'GXR 200 / GXR 250'
     ]
   },
   {
-    nombre: 'Benelli',
+    nombre: 'Bajaj (Rouser)',
     modelos: [
-      '180S',
-      '251S',
-      '302S / TNT 300',
-      'Imperiale 400',
-      'Leoncino 250 / 500',
-      'TNT 15',
-      'TRK 251',
-      'TRK 502 / 502X'
+      'Boxer 150 (BM / AT)',
+      'Rouser NS 125',
+      'Rouser NS 160',
+      'Rouser NS 200 (Carburada / FI)',
+      'Avenger 220',
+      'Dominar 250'
     ]
   },
   {
-    nombre: 'Royal Enfield',
+    nombre: 'Yamaha',
     modelos: [
-      'Classic 350',
-      'Himalayan 411 / 450',
-      'Hunter 350',
-      'Interceptor 650',
-      'Meteor 350',
-      'Super Meteor 650'
+      'Crypton 110',
+      'YBR 125 (ED / Z)',
+      'XTZ 125',
+      'FZ-S FI 150 / FZ 16',
+      'SZ-RR 150',
+      'Ray ZR 125 (Scooter)',
+      'FZ25 250',
+      'XTZ 250'
     ]
   },
   {
-    nombre: 'CFMoto',
+    nombre: 'Brava',
     modelos: [
-      '300 NK',
-      '400 NK / 650 NK',
-      '450 MT',
-      '650 MT / 800 MT',
-      'CL-X 700'
+      'Nevada 110 (Base / Full)',
+      'Altino 150 / Altino 180',
+      'Elektra 150',
+      'Texana 200'
     ]
   },
   {
-    nombre: 'Kawasaki',
+    nombre: 'Siam',
     modelos: [
-      'KLR 650',
-      'KLX 150 / 300',
-      'Ninja 300 / 400',
-      'Versys 300 / 650',
-      'Z400 / Z650 / Z900'
+      'Qu 110',
+      'Trender 150',
+      'Nomad 150',
+      'Tenax 125 / 150',
+      'Quirion 150'
     ]
   },
   {
-    nombre: 'BMW Motorrad',
+    nombre: 'Suzuki',
     modelos: [
-      'F 750 GS / F 850 GS',
-      'G 310 GS / G 310 R',
-      'R 1200 GS / R 1250 GS'
+      'AX 100',
+      'EN 125 (2A / Hu)',
+      'GN 125 H',
+      'Gixxer 150'
+    ]
+  },
+  {
+    nombre: 'Appia',
+    modelos: [
+      'CitiPlus 110',
+      'Vectra 110',
+      'Brezza 150',
+      'Leyenda 150',
+      'Stronger 150'
+    ]
+  },
+  {
+    nombre: 'Okinoi',
+    modelos: [
+      'OKN 110',
+      'Roma 125 / 150 (Scooter)',
+      'OKN 150',
+      'Steve 150'
+    ]
+  },
+  {
+    nombre: 'Hero',
+    modelos: [
+      'Ignitor 125',
+      'Hunk 150 / Hunk 160R',
+      'Xpulse 200'
     ]
   }
 ];
@@ -483,3 +509,26 @@ export const ANIOS_ANTERIORES = Array.from(
   { length: ANIO_ACTUAL - ANIO_MINIMO_LISTA },
   (_, i) => String(ANIO_ACTUAL - 1 - i)
 );
+
+export const LOCALIDADES_CORDOBA = [
+  'Córdoba Capital',
+  'Villa Carlos Paz',
+  'Río Cuarto',
+  'Villa María',
+  'Alta Gracia',
+  'Villa Allende',
+  'Jesús María',
+  'La Calera',
+  'Río Tercero',
+  'San Francisco',
+  'Mendiolaza',
+  'Unquillo',
+  'Río Ceballos',
+  'Cosquín',
+  'Bell Ville',
+  'Marcos Juárez',
+  'Arroyito',
+  'Río Segundo',
+  'Pilar',
+  'Colonia Caroya'
+];

@@ -39,7 +39,7 @@ export default function SelectorVehiculo({
               setTimeout(() => otraMarcaInputRef.current?.focus(), 50);
             }
           }}
-          className={`w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50/50 focus:bg-white focus:border-[#21699B] focus:ring-3 focus:ring-[#21699B]/15 outline-none transition text-sm ${
+          className={`w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50/50 focus:bg-white focus:border-[#21699B] focus:ring-3 focus:ring-[#21699B]/15 outline-none transition text-base sm:text-sm ${
             datos.marca ? 'text-slate-900 font-medium' : 'text-slate-500'
           }`}
         >
@@ -67,7 +67,7 @@ export default function SelectorVehiculo({
             placeholder={placeholderOtraMarca}
             value={datos.otraMarca}
             onChange={(e) => onChange({ ...datos, otraMarca: e.target.value })}
-            className="w-full px-4 py-3 rounded-xl border border-[#21699B] bg-white focus:ring-3 focus:ring-[#21699B]/15 outline-none transition text-sm text-slate-900 placeholder:text-slate-400"
+            className="w-full px-4 py-3 rounded-xl border border-[#21699B] bg-white focus:ring-3 focus:ring-[#21699B]/15 outline-none transition text-base sm:text-sm text-slate-900 placeholder:text-slate-400"
           />
         </div>
       )}
@@ -84,7 +84,7 @@ export default function SelectorVehiculo({
             placeholder={placeholderModeloDirecto}
             value={datos.otroModelo}
             onChange={(e) => onChange({ ...datos, otroModelo: e.target.value })}
-            className="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50/50 focus:bg-white focus:border-[#21699B] focus:ring-3 focus:ring-[#21699B]/15 outline-none transition text-sm text-slate-900 placeholder:text-slate-500"
+            className="w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50/50 focus:bg-white focus:border-[#21699B] focus:ring-3 focus:ring-[#21699B]/15 outline-none transition text-base sm:text-sm text-slate-900 placeholder:text-slate-500"
           />
         ) : (
           <div className="space-y-2.5">
@@ -100,7 +100,7 @@ export default function SelectorVehiculo({
                   setTimeout(() => otroModeloInputRef.current?.focus(), 50);
                 }
               }}
-              className={`w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50/50 focus:bg-white focus:border-[#21699B] focus:ring-3 focus:ring-[#21699B]/15 outline-none transition text-sm disabled:opacity-60 disabled:cursor-not-allowed ${
+              className={`w-full px-4 py-3 rounded-xl border border-slate-300 bg-slate-50/50 focus:bg-white focus:border-[#21699B] focus:ring-3 focus:ring-[#21699B]/15 outline-none transition text-base sm:text-sm disabled:opacity-60 disabled:cursor-not-allowed ${
                 datos.modelo ? 'text-slate-900 font-medium' : 'text-slate-500'
               }`}
             >
@@ -130,7 +130,7 @@ export default function SelectorVehiculo({
                 placeholder={`Escribí qué modelo de ${datos.marca} tenés...`}
                 value={datos.otroModelo}
                 onChange={(e) => onChange({ ...datos, otroModelo: e.target.value })}
-                className="w-full px-4 py-3 rounded-xl border border-[#21699B] bg-white focus:ring-3 focus:ring-[#21699B]/15 outline-none transition text-sm text-slate-900 placeholder:text-slate-400"
+                className="w-full px-4 py-3 rounded-xl border border-[#21699B] bg-white focus:ring-3 focus:ring-[#21699B]/15 outline-none transition text-base sm:text-sm text-slate-900 placeholder:text-slate-400"
               />
             )}
           </div>
