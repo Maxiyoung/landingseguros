@@ -6,9 +6,6 @@ import Header from './components/Header';
 import Hero from './components/Hero';
 import LogosCompanias from './components/LogosCompanias';
 import Planes from './components/Planes';
-import Diferencial from './components/Diferencial';
-import OtrosRamos from './components/OtrosRamos';
-import PasosYFaq from './components/PasosYFaq';
 import Emergencia from './components/Emergencia';
 import Footer from './components/Footer';
 import BotonWhatsApp from './components/BotonWhatsApp';
@@ -74,9 +71,6 @@ export default function App() {
           onRamoChange={handleRamoChange}
           onSeleccionarPlan={handleSeleccionarPlan}
         />
-        <Diferencial />
-        <OtrosRamos />
-        <PasosYFaq />
         <Emergencia />
       </main>
 
