@@ -20,6 +20,14 @@ export function armarMensajeCotizacion(ramo, formData) {
   const vehiculoTexto = `${marcaFinal} ${modeloFinal}`.trim() || 'A confirmar';
   const anioFinal =
     formData.anio === 'OTRO' ? formData.otroAnio.trim() : formData.anio;
+  const localidadFinal =
+    (formData.localidad === 'OTRA'
+      ? formData.otraLocalidad?.trim()
+      : formData.localidad?.trim()) || 'A confirmar';
+  const coberturaFinal =
+    typeof formData.cobertura === 'object'
+      ? formData.cobertura[ramo]
+      : formData.cobertura;
 
   const detalleExtra = esMoto
     ? `⚙️ *Cilindrada:* ${formData.cilindrada}\n`
@@ -30,8 +38,8 @@ export function armarMensajeCotizacion(ramo, formData) {
     `${iconoRamo} *${esMoto ? 'Moto' : 'Vehículo'}:* ${vehiculoTexto}\n` +
     `📅 *Año:* ${anioFinal || 'A confirmar'}\n` +
     detalleExtra +
-    `📍 *Localidad:* ${formData.localidad}\n` +
-    `🛡️ *Cobertura:* ${formData.cobertura}\n\n` +
+    `📍 *Localidad:* ${localidadFinal}\n` +
+    `🛡️ *Cobertura:* ${coberturaFinal}\n\n` +
     `¿Me podrás pasar opciones? ¡Gracias!`
   );
 }

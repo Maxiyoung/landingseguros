@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { COBERTURAS_POR_RAMO } from './data/coberturas';
 import { PRODUCTOR } from './config';
 import TopBar from './components/TopBar';
@@ -12,6 +12,7 @@ import BotonWhatsApp from './components/BotonWhatsApp';
 
 export default function App() {
   const [ramo, setRamo] = useState('auto'); // 'auto' | 'moto'
+  const [cotizadorHighlight, setCotizadorHighlight] = useState(false);
   const [formData, setFormData] = useState({
     auto: { marca: '', otraMarca: '', modelo: '', otroModelo: '' },
     moto: { marca: '', otraMarca: '', modelo: '', otroModelo: '' },
@@ -20,26 +21,41 @@ export default function App() {
     gnc: false,
     cilindrada: 'Hasta 250cc',
     localidad: PRODUCTOR.localidadDefault,
-    cobertura: COBERTURAS_POR_RAMO.auto[0].valor
+    otraLocalidad: '',
+    cobertura: {
+      auto: COBERTURAS_POR_RAMO.auto[0].valor,
+      moto: COBERTURAS_POR_RAMO.moto[0].valor
+    }
   });
 
   const marcaSelectRef = useRef(null);
+  const highlightTimerRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (highlightTimerRef.current) clearTimeout(highlightTimerRef.current);
+    };
+  }, []);
 
   const handleRamoChange = (nuevoRamo) => {
+    if (nuevoRamo === ramo) return;
     setRamo(nuevoRamo);
-    setFormData((prev) => ({
-      ...prev,
-      cobertura: COBERTURAS_POR_RAMO[nuevoRamo][0].valor
-    }));
   };
 
-  const irAlCotizador = () => {
+  const irAlCotizador = (conResaltado = false) => {
     const cotizadorEl = document.getElementById('cotizador');
     if (cotizadorEl) {
-      cotizadorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      cotizadorEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    if (conResaltado) {
+      setCotizadorHighlight(true);
+      if (highlightTimerRef.current) clearTimeout(highlightTimerRef.current);
+      highlightTimerRef.current = setTimeout(() => {
+        setCotizadorHighlight(false);
+      }, 1300);
     }
     setTimeout(() => {
-      marcaSelectRef.current?.focus();
+      marcaSelectRef.current?.focus({ preventScroll: true });
     }, 450);
   };
 
@@ -47,13 +63,16 @@ export default function App() {
     setRamo(nuevoRamo);
     setFormData((prev) => ({
       ...prev,
-      cobertura: valorCobertura
+      cobertura: {
+        ...prev.cobertura,
+        [nuevoRamo]: valorCobertura
+      }
     }));
-    irAlCotizador();
+    irAlCotizador(true);
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F5F2EB] text-[#0F172A] selection:bg-[#6DA6C9]/30 relative">
+    <div id="top" className="min-h-screen flex flex-col text-[#0F172A] selection:bg-[#6DA6C9]/30 relative z-10">
       <TopBar />
       <Header />
 
@@ -64,6 +83,7 @@ export default function App() {
           formData={formData}
           setFormData={setFormData}
           marcaSelectRef={marcaSelectRef}
+          cotizadorHighlight={cotizadorHighlight}
         />
         <LogosCompanias />
         <Planes
@@ -75,7 +95,7 @@ export default function App() {
       </main>
 
       <Footer />
-      <BotonWhatsApp onIrAlCotizador={irAlCotizador} />
+      <BotonWhatsApp onIrAlCotizador={() => irAlCotizador(false)} />
     </div>
   );
 }
