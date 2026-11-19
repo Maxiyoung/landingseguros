@@ -1,5 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 
+const DELAY_CLASSES = {
+  0: '',
+  75: 'delay-75',
+  100: 'delay-100',
+  150: 'delay-150',
+  200: 'delay-200',
+  300: 'delay-300'
+};
+
 export default function Reveal({ children, delay = 0, className = '' }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(
@@ -25,11 +34,12 @@ export default function Reveal({ children, delay = 0, className = '' }) {
     return () => observer.disconnect();
   }, [visible]);
 
+  const delayClass = DELAY_CLASSES[delay] ?? '';
+
   return (
     <div
       ref={ref}
-      style={delay ? { transitionDelay: `${delay}ms` } : undefined}
-      className={`reveal ${visible ? 'reveal-visible' : ''} ${className}`.trim()}
+      className={`reveal ${visible ? 'reveal-visible' : ''} ${delayClass} ${className}`.trim()}
     >
       {children}
     </div>

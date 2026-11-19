@@ -55,12 +55,9 @@ function PlanCard({ plan, ramo, onSeleccionarPlan }) {
 
       <div
         aria-hidden="true"
-        style={{
-          '--spot-color': isDestacado
-            ? 'rgba(109, 166, 201, 0.16)'
-            : 'rgba(33, 105, 155, 0.06)'
-        }}
-        className="plan-spotlight pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        className={`plan-spotlight ${
+          isDestacado ? 'plan-spotlight-dark' : 'plan-spotlight-light'
+        } pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
       />
 
       <div className="relative">

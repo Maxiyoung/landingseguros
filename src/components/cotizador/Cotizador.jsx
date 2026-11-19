@@ -53,6 +53,23 @@ const CILINDRADA_OPTIONS = [
   { value: 'Más de 250cc', label: 'Más de 250cc' }
 ];
 
+const PROGRESO_WIDTH_CLASS = {
+  1: 'w-1/3',
+  2: 'w-2/3',
+  3: 'w-full'
+};
+
+function esOtroAnioValido(valor) {
+  const anioStr = (valor || '').trim();
+  if (!anioStr) return false;
+  const anioNum = Number(anioStr);
+  return (
+    Number.isInteger(anioNum) &&
+    anioNum >= LIMITES_FORMULARIO.anioMinimo &&
+    anioNum < ANIO_MINIMO_LISTA
+  );
+}
+
 export default function Cotizador({
   ramo,
   onRamoChange,
@@ -63,12 +80,17 @@ export default function Cotizador({
 }) {
   const idPrefix = useId();
   const [errors, setErrors] = useState({});
+  const anioSelectRef = useRef(null);
+  const localidadSelectRef = useRef(null);
   const otraLocalidadInputRef = useRef(null);
   const otroAnioInputRef = useRef(null);
 
   const anioId = `${idPrefix}-anio`;
+  const anioLabelId = `${idPrefix}-anio-label`;
   const localidadId = `${idPrefix}-localidad`;
+  const localidadLabelId = `${idPrefix}-localidad-label`;
   const coberturaId = `${idPrefix}-cobertura`;
+  const coberturaLabelId = `${idPrefix}-cobertura-label`;
 
   const aniosOptions = useMemo(
     () => [
@@ -95,6 +117,9 @@ export default function Cotizador({
       : formData.cobertura;
 
   const datosRamo = formData[ramo];
+  const anioSeleccionado = datosRamo.anio ?? '';
+  const otroAnioValor = datosRamo.otroAnio ?? '';
+
   const marcaVal =
     datosRamo.marca === 'OTRA' ? datosRamo.otraMarca.trim() : datosRamo.marca;
   const modeloVal =
@@ -102,7 +127,11 @@ export default function Cotizador({
       ? datosRamo.otroModelo.trim()
       : datosRamo.modelo;
   const anioVal =
-    formData.anio === 'OTRO' ? formData.otroAnio.trim() : formData.anio;
+    anioSeleccionado === 'OTRO'
+      ? esOtroAnioValido(otroAnioValor)
+        ? otroAnioValor.trim()
+        : ''
+      : anioSeleccionado;
   const localidadVal =
     formData.localidad === 'OTRA'
       ? (formData.otraLocalidad || '').trim()
@@ -112,7 +141,6 @@ export default function Cotizador({
   const pasoAnioYZonaListo = Boolean(anioVal && localidadVal);
   const pasosCompletos = (pasoVehiculoListo ? 1 : 0) + (pasoAnioYZonaListo ? 1 : 0) + 1;
   const isFormReady = pasoVehiculoListo && pasoAnioYZonaListo;
-  const progresoPorcentaje = Math.round((pasosCompletos / 3) * 100);
 
   const clearError = (key) => {
     setErrors((prev) => (prev[key] ? { ...prev, [key]: false } : prev));
@@ -127,18 +155,9 @@ export default function Cotizador({
     if (datosRamo.marca === 'OTRA' && !datosRamo.otroModelo.trim()) nextErrors.modelo = true;
     if (datosRamo.marca && datosRamo.marca !== 'OTRA' && !datosRamo.modelo) nextErrors.modelo = true;
     if (datosRamo.modelo === 'OTRO' && !datosRamo.otroModelo.trim()) nextErrors.otroModelo = true;
-    if (!formData.anio) nextErrors.anio = true;
-    if (formData.anio === 'OTRO') {
-      const anioStr = formData.otroAnio.trim();
-      const anioNum = Number(anioStr);
-      if (
-        !anioStr ||
-        !Number.isInteger(anioNum) ||
-        anioNum < LIMITES_FORMULARIO.anioMinimo ||
-        anioNum >= ANIO_MINIMO_LISTA
-      ) {
-        nextErrors.otroAnio = true;
-      }
+    if (!anioSeleccionado) nextErrors.anio = true;
+    if (anioSeleccionado === 'OTRO' && !esOtroAnioValido(otroAnioValor)) {
+      nextErrors.otroAnio = true;
     }
     if (!formData.localidad) nextErrors.localidad = true;
     if (formData.localidad === 'OTRA' && !(formData.otraLocalidad || '').trim()) {
@@ -147,7 +166,17 @@ export default function Cotizador({
 
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
-      if (nextErrors.marca) marcaSelectRef.current?.focus({ preventScroll: true });
+      if (nextErrors.marca) {
+        marcaSelectRef.current?.focus({ preventScroll: true });
+      } else if (nextErrors.anio) {
+        anioSelectRef.current?.focus({ preventScroll: true });
+      } else if (nextErrors.otroAnio) {
+        otroAnioInputRef.current?.focus({ preventScroll: true });
+      } else if (nextErrors.localidad) {
+        localidadSelectRef.current?.focus({ preventScroll: true });
+      } else if (nextErrors.otraLocalidad) {
+        otraLocalidadInputRef.current?.focus({ preventScroll: true });
+      }
       return;
     }
 
@@ -156,6 +185,16 @@ export default function Cotizador({
   };
 
   const hasValidationErrors = Object.values(errors).some(Boolean);
+  const mensajeError =
+    errors.otroAnio &&
+    !errors.marca &&
+    !errors.otraMarca &&
+    !errors.modelo &&
+    !errors.otroModelo &&
+    !errors.localidad &&
+    !errors.otraLocalidad
+      ? `Ingresá un año válido entre ${LIMITES_FORMULARIO.anioMinimo} y ${ANIO_MINIMO_LISTA - 1}.`
+      : 'Completá los campos marcados para armar tu cotización exacta.';
   const selectorConfig = RAMO_SELECTOR_CONFIG[ramo];
 
   return (
@@ -221,11 +260,12 @@ export default function Cotizador({
             <div className="h-1 w-full rounded-full bg-stone-200/80 overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  PROGRESO_WIDTH_CLASS[pasosCompletos] || 'w-1/3'
+                } ${
                   isFormReady
                     ? 'bg-gradient-to-r from-[#21699B] to-emerald-500'
                     : 'bg-gradient-to-r from-[#21699B] to-[#6DA6C9]'
                 }`}
-                style={{ width: `${progresoPorcentaje}%` }}
               />
             </div>
           </div>
@@ -258,6 +298,7 @@ export default function Cotizador({
             <div className="relative z-20 grid grid-cols-12 gap-2.5 sm:gap-3">
               <div className="col-span-5">
                 <label
+                  id={anioLabelId}
                   htmlFor={anioId}
                   className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1.5 ml-1"
                 >
@@ -265,9 +306,11 @@ export default function Cotizador({
                 </label>
                 <SearchableSelect
                   id={anioId}
+                  labelId={anioLabelId}
+                  triggerRef={anioSelectRef}
                   compact
                   ariaLabel="Año del vehículo"
-                  value={formData.anio}
+                  value={anioSeleccionado}
                   options={aniosOptions}
                   extraOption={{ value: 'OTRO', label: `Ant. a ${ANIO_MINIMO_LISTA}` }}
                   placeholder="Año..."
@@ -278,8 +321,11 @@ export default function Cotizador({
                     clearError('otroAnio');
                     setFormData({
                       ...formData,
-                      anio: val,
-                      otroAnio: val === 'OTRO' ? formData.otroAnio : ''
+                      [ramo]: {
+                        ...datosRamo,
+                        anio: val,
+                        otroAnio: val === 'OTRO' ? otroAnioValor : ''
+                      }
                     });
                     if (val === 'OTRO') {
                       setTimeout(() => otroAnioInputRef.current?.focus(), 60);
@@ -290,6 +336,7 @@ export default function Cotizador({
 
               <div className="col-span-7">
                 <label
+                  id={localidadLabelId}
                   htmlFor={localidadId}
                   className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1.5 ml-1"
                 >
@@ -297,6 +344,8 @@ export default function Cotizador({
                 </label>
                 <SearchableSelect
                   id={localidadId}
+                  labelId={localidadLabelId}
+                  triggerRef={localidadSelectRef}
                   compact
                   align="right"
                   ariaLabel="Localidad"
@@ -322,7 +371,7 @@ export default function Cotizador({
               </div>
             </div>
 
-            {formData.anio === 'OTRO' && (
+            {anioSeleccionado === 'OTRO' && (
               <div className="animate-field-in">
                 <input
                   ref={otroAnioInputRef}
@@ -330,11 +379,18 @@ export default function Cotizador({
                   min={LIMITES_FORMULARIO.anioMinimo}
                   max={ANIO_MINIMO_LISTA - 1}
                   aria-label={`Escribir año anterior a ${ANIO_MINIMO_LISTA}`}
+                  aria-invalid={Boolean(errors.otroAnio) || undefined}
                   placeholder="Escribí el año del vehículo (Ej: 1992)"
-                  value={formData.otroAnio}
+                  value={otroAnioValor}
                   onChange={(e) => {
                     clearError('otroAnio');
-                    setFormData({ ...formData, otroAnio: e.target.value.slice(0, 4) });
+                    setFormData({
+                      ...formData,
+                      [ramo]: {
+                        ...datosRamo,
+                        otroAnio: e.target.value.slice(0, 4)
+                      }
+                    });
                   }}
                   className={getFieldInputClass({
                     invalid: Boolean(errors.otroAnio),
@@ -351,6 +407,7 @@ export default function Cotizador({
                   type="text"
                   maxLength={LIMITES_FORMULARIO.localidadMaxLength}
                   aria-label="Escribir otra localidad"
+                  aria-invalid={Boolean(errors.otraLocalidad) || undefined}
                   placeholder="Escribí tu ciudad o localidad (Ej: Oncativo, Laboulaye...)"
                   value={formData.otraLocalidad || ''}
                   onChange={(e) => {
@@ -402,6 +459,7 @@ export default function Cotizador({
 
             <div className="relative z-10">
               <label
+                id={coberturaLabelId}
                 htmlFor={coberturaId}
                 className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1.5 ml-1"
               >
@@ -409,6 +467,7 @@ export default function Cotizador({
               </label>
               <SearchableSelect
                 id={coberturaId}
+                labelId={coberturaLabelId}
                 ariaLabel="Cobertura"
                 searchable={false}
                 value={coberturaActual}
@@ -431,7 +490,7 @@ export default function Cotizador({
                 className="animate-field-in flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 font-medium"
               >
                 <AlertCircle aria-hidden="true" className="w-4 h-4 shrink-0 text-rose-600" />
-                <span>Completá los campos marcados para armar tu cotización exacta.</span>
+                <span>{mensajeError}</span>
               </div>
             )}
 

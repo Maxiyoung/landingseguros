@@ -69,6 +69,14 @@
   );
 }
 
+.plan-spotlight-dark {
+  --spot-color: rgba(109, 166, 201, 0.16);
+}
+
+.plan-spotlight-light {
+  --spot-color: rgba(33, 105, 155, 0.06);
+}
+
 /* Scrollbar discreto para listas desplegables */
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;

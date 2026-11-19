@@ -14,10 +14,8 @@ export default function App() {
   const [ramo, setRamo] = useState('auto'); // 'auto' | 'moto'
   const [cotizadorHighlight, setCotizadorHighlight] = useState(false);
   const [formData, setFormData] = useState({
-    auto: { marca: '', otraMarca: '', modelo: '', otroModelo: '' },
-    moto: { marca: '', otraMarca: '', modelo: '', otroModelo: '' },
-    anio: '',
-    otroAnio: '',
+    auto: { marca: '', otraMarca: '', modelo: '', otroModelo: '', anio: '', otroAnio: '' },
+    moto: { marca: '', otraMarca: '', modelo: '', otroModelo: '', anio: '', otroAnio: '' },
     gnc: false,
     cilindrada: 'Hasta 250cc',
     localidad: PRODUCTOR.localidadDefault,
@@ -30,10 +28,12 @@ export default function App() {
 
   const marcaSelectRef = useRef(null);
   const highlightTimerRef = useRef(null);
+  const focusTimerRef = useRef(null);
 
   useEffect(() => {
     return () => {
       if (highlightTimerRef.current) clearTimeout(highlightTimerRef.current);
+      if (focusTimerRef.current) clearTimeout(focusTimerRef.current);
     };
   }, []);
 
@@ -54,7 +54,8 @@ export default function App() {
         setCotizadorHighlight(false);
       }, 1300);
     }
-    setTimeout(() => {
+    if (focusTimerRef.current) clearTimeout(focusTimerRef.current);
+    focusTimerRef.current = setTimeout(() => {
       marcaSelectRef.current?.focus({ preventScroll: true });
     }, 450);
   };

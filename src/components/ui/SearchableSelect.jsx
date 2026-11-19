@@ -10,6 +10,7 @@ function normalizeText(str) {
 
 export default function SearchableSelect({
   id,
+  labelId,
   ariaLabel,
   value,
   onChange,
@@ -33,6 +34,7 @@ export default function SearchableSelect({
   const searchInputRef = useRef(null);
   const listRef = useRef(null);
   const listboxId = useId();
+  const valueId = `${listboxId}-val`;
   const btnRef = triggerRef || internalTriggerRef;
 
   const normalizedOptions = useMemo(
@@ -208,13 +210,15 @@ export default function SearchableSelect({
         ref={btnRef}
         type="button"
         disabled={disabled}
-        aria-label={ariaLabel}
+        aria-labelledby={labelId ? `${labelId} ${valueId}` : undefined}
+        aria-label={labelId ? undefined : ariaLabel}
+        aria-invalid={invalid || undefined}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={open ? listboxId : undefined}
         onClick={() => (open ? setOpen(false) : openDropdown())}
         onKeyDown={handleKeyDown}
-        className={`w-full flex items-center justify-between gap-2 text-left rounded-xl border outline-none transition-all cursor-pointer disabled:opacity-55 disabled:cursor-not-allowed ${
+        className={`w-full flex items-center justify-between gap-2 text-left rounded-xl border outline-none transition-all cursor-pointer disabled:opacity-55 disabled:cursor-not-allowed focus-visible:border-[#21699B] focus-visible:ring-3 focus-visible:ring-[#21699B]/20 ${
           compact ? 'pl-3 pr-2.5 py-3' : 'pl-4 pr-3.5 py-3'
         } ${
           open
@@ -225,6 +229,7 @@ export default function SearchableSelect({
         }`}
       >
         <span
+          id={valueId}
           className={`truncate text-base sm:text-sm ${
             selectedOption
               ? 'text-slate-900 font-semibold'

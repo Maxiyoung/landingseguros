@@ -29,14 +29,17 @@ export default function SelectorVehiculo({
   );
 
   const marcaId = `${idPrefix}-marca`;
+  const marcaLabelId = `${idPrefix}-marca-label`;
   const otraMarcaId = `${idPrefix}-otra-marca`;
   const modeloId = `${idPrefix}-modelo`;
+  const modeloLabelId = `${idPrefix}-modelo-label`;
   const otroModeloId = `${idPrefix}-otro-modelo`;
 
   return (
     <>
       <div>
         <label
+          id={marcaLabelId}
           htmlFor={marcaId}
           className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1.5 ml-1"
         >
@@ -44,6 +47,7 @@ export default function SelectorVehiculo({
         </label>
         <SearchableSelect
           id={marcaId}
+          labelId={marcaLabelId}
           triggerRef={marcaSelectRef}
           ariaLabel={labelMarca}
           value={datos.marca}
@@ -75,6 +79,7 @@ export default function SelectorVehiculo({
             type="text"
             maxLength={LIMITES_FORMULARIO.marcaMaxLength}
             aria-label="Escribir otra marca"
+            aria-invalid={Boolean(errors.otraMarca) || undefined}
             placeholder={placeholderOtraMarca}
             value={datos.otraMarca}
             onChange={(e) => onChange({ ...datos, otraMarca: e.target.value })}
@@ -88,6 +93,7 @@ export default function SelectorVehiculo({
 
       <div>
         <label
+          id={modeloLabelId}
           htmlFor={datos.marca === 'OTRA' ? otroModeloId : modeloId}
           className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1.5 ml-1"
         >
@@ -99,6 +105,7 @@ export default function SelectorVehiculo({
             type="text"
             maxLength={LIMITES_FORMULARIO.modeloMaxLength}
             aria-label="Escribir modelo"
+            aria-invalid={Boolean(errors.modelo) || undefined}
             placeholder={placeholderModeloDirecto}
             value={datos.otroModelo}
             onChange={(e) => onChange({ ...datos, otroModelo: e.target.value })}
@@ -108,6 +115,7 @@ export default function SelectorVehiculo({
           <div className="space-y-2.5">
             <SearchableSelect
               id={modeloId}
+              labelId={modeloLabelId}
               disabled={!datos.marca}
               ariaLabel="Modelo"
               value={datos.modelo}
@@ -143,6 +151,7 @@ export default function SelectorVehiculo({
                 type="text"
                 maxLength={LIMITES_FORMULARIO.modeloMaxLength}
                 aria-label="Escribir otro modelo"
+                aria-invalid={Boolean(errors.otroModelo) || undefined}
                 placeholder={`Escribí qué modelo de ${datos.marca} tenés...`}
                 value={datos.otroModelo}
                 onChange={(e) => onChange({ ...datos, otroModelo: e.target.value })}

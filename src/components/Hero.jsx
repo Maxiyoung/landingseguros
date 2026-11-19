@@ -72,8 +72,7 @@ export default function Hero({
 
           {/* 2. Cotizador Protagonista */}
           <div
-            className="order-2 lg:col-span-6 lg:row-span-2 relative z-30 scroll-mt-24 animate-hero-in"
-            style={{ animationDelay: '90ms' }}
+            className="order-2 lg:col-span-6 lg:row-span-2 relative z-30 scroll-mt-24 animate-hero-in [animation-delay:90ms]"
             id="cotizador"
           >
             <Cotizador
@@ -88,8 +87,7 @@ export default function Hero({
 
           {/* 3. Puntos de confianza + sello humano del productor + acceso rápido */}
           <div
-            className="order-3 lg:col-span-6 relative z-10 space-y-4 animate-hero-in"
-            style={{ animationDelay: '160ms' }}
+            className="order-3 lg:col-span-6 relative z-10 space-y-4 animate-hero-in [animation-delay:160ms]"
           >
             <ul className="space-y-3 text-sm font-medium text-slate-800 bg-white/80 backdrop-blur-sm lg:bg-transparent lg:backdrop-blur-none p-4 sm:p-5 lg:p-0 rounded-2xl border border-stone-200/90 lg:border-0 shadow-[0_6px_20px_-12px_rgba(15,23,42,0.08)] lg:shadow-none">
               {BENEFICIOS.map((texto) => (

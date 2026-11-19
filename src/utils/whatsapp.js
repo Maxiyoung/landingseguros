@@ -51,10 +51,12 @@ export function armarMensajeCotizacion(ramo, formData) {
       : sanitizarCampoTexto(datosVehiculo.modelo, LIMITES_FORMULARIO.modeloMaxLength);
 
   const vehiculoTexto = `${marcaFinal} ${modeloFinal}`.trim() || 'A confirmar';
+  const anioRaw = datosVehiculo.anio ?? formData.anio ?? '';
+  const otroAnioRaw = datosVehiculo.otroAnio ?? formData.otroAnio ?? '';
   const anioFinal =
-    formData.anio === 'OTRO'
-      ? sanitizarCampoTexto(formData.otroAnio, 4)
-      : sanitizarCampoTexto(formData.anio, 20);
+    anioRaw === 'OTRO'
+      ? sanitizarCampoTexto(otroAnioRaw, 4)
+      : sanitizarCampoTexto(anioRaw, 20);
   const localidadFinal =
     (formData.localidad === 'OTRA'
       ? sanitizarCampoTexto(formData.otraLocalidad, LIMITES_FORMULARIO.localidadMaxLength)

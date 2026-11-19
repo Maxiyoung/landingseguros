@@ -14,24 +14,25 @@ Web: https://somosmasseguross.vercel.app/
   ("Plus Jakarta Sans").
 
 
-2. TIPOGRAFIAS (GOOGLE FONTS)
+2. TIPOGRAFIAS (SELF-HOSTED VIA FONTSOURCE)
 --------------------------------------------------------------------------------
 A) Fuente de Titulos y Logo (Serif):
-   - Nombre: Fraunces
-   - Fallback CSS: 'Fraunces', Georgia, serif
+   - Nombre: Fraunces Variable (@fontsource-variable/fraunces)
+   - Fallback CSS: 'Fraunces Variable', 'Fraunces', Georgia, serif
    - Pesos utilizados: 600 (SemiBold) y 700 (Bold)
    - Donde se usa: Logo "SOMOSMAS seguros", Titulo principal (H1), Titulos de
      seccion (H2), nombres de planes (H3) y nombres de aseguradoras en Gruas.
 
 B) Fuente de Cuerpo, Interfaz y Formulario (Sans-Serif):
-   - Nombre: Plus Jakarta Sans
-   - Fallback CSS: 'Plus Jakarta Sans', sans-serif
+   - Nombre: Plus Jakarta Sans Variable (@fontsource-variable/plus-jakarta-sans)
+   - Fallback CSS: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif
    - Pesos utilizados: 400 (Regular), 500 (Medium), 600 (SemiBold), 700 (Bold)
    - Donde se usa: Textos generales, etiquetas del cotizador, selects, inputs,
      botones, barra superior (TopBar), navegacion y pie de pagina (Footer).
 
-C) Link de importacion en HTML (Google Fonts):
-   https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap
+C) Carga en produccion:
+   Importadas localmente desde src/main.jsx (sin llamadas externas a CDN,
+   compatible con CSP estricta).
 
 
 3. PALETA DE COLORES (CODIGOS HEX Y RGB)
@@ -41,8 +42,8 @@ A) FONDOS:
      HEX: #F5F2EB  |  RGB: rgb(245, 242, 235)
    - Blanco Puro (Tarjeta del Cotizador, tarjetas de planes y logos):
      HEX: #FFFFFF  |  RGB: rgb(255, 255, 255)
-   - Gris Azulado Muy Claro (Fondo de inputs y selects en reposo):
-     HEX: #F8FAFC  |  RGB: rgb(248, 250, 252) (con 50% de opacidad)
+   - Crema Suave (Fondo de inputs y selects en reposo):
+     HEX: #FAF9F6  |  RGB: rgb(250, 249, 246)
 
 B) AZULES DE MARCA (IDENTIDAD SOMOSMAS):
    - Azul Marino Noche (TopBar, Footer, pestaña activa, tarjeta "Mas elegida", H1/H2):
