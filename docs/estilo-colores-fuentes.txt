@@ -1,0 +1,106 @@
+================================================================================
+GUIA DE ESTILO, COLORES Y TIPOGRAFIAS - SOMOSMAS SEGUROS
+Web: https://somosmasseguross.vercel.app/
+================================================================================
+
+1. CONCEPTO Y ESTILO VISUAL
+--------------------------------------------------------------------------------
+- Estilo general: Editorial moderno, calido y Mobile-First.
+- En lugar del tipico fondo blanco frio de aseguradora corporativa, combina un
+  fondo crema/papel calido (#F5F2EB) con tarjetas blancas puras (#FFFFFF) y
+  bloques de alto contraste en Azul Marino Noche (#0F172A).
+- Combina una tipografia Serif con personalidad para los titulos ("Fraunces")
+  con una Sans-Serif moderna y muy legible para formularios y botones
+  ("Plus Jakarta Sans").
+
+
+2. TIPOGRAFIAS (SELF-HOSTED VIA FONTSOURCE)
+--------------------------------------------------------------------------------
+A) Fuente de Titulos y Logo (Serif):
+   - Nombre: Fraunces Variable (@fontsource-variable/fraunces)
+   - Fallback CSS: 'Fraunces Variable', 'Fraunces', Georgia, serif
+   - Pesos utilizados: 600 (SemiBold) y 700 (Bold)
+   - Donde se usa: Logo "SOMOSMAS seguros", Titulo principal (H1), Titulos de
+     seccion (H2), nombres de planes (H3) y nombres de aseguradoras en Gruas.
+
+B) Fuente de Cuerpo, Interfaz y Formulario (Sans-Serif):
+   - Nombre: Plus Jakarta Sans Variable (@fontsource-variable/plus-jakarta-sans)
+   - Fallback CSS: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif
+   - Pesos utilizados: 400 (Regular), 500 (Medium), 600 (SemiBold), 700 (Bold)
+   - Donde se usa: Textos generales, etiquetas del cotizador, selects, inputs,
+     botones, barra superior (TopBar), navegacion y pie de pagina (Footer).
+
+C) Carga en produccion:
+   Importadas localmente desde src/main.jsx (sin llamadas externas a CDN,
+   compatible con CSP estricta).
+
+
+3. PALETA DE COLORES (CODIGOS HEX Y RGB)
+--------------------------------------------------------------------------------
+A) FONDOS:
+   - Crema / Papel Calido (Fondo principal de la pagina):
+     HEX: #F5F2EB  |  RGB: rgb(245, 242, 235)
+   - Blanco Puro (Tarjeta del Cotizador, tarjetas de planes y logos):
+     HEX: #FFFFFF  |  RGB: rgb(255, 255, 255)
+   - Crema Suave (Fondo de inputs y selects en reposo):
+     HEX: #FAF9F6  |  RGB: rgb(250, 249, 246)
+
+B) AZULES DE MARCA (IDENTIDAD SOMOSMAS):
+   - Azul Marino Noche (TopBar, Footer, pestaña activa, tarjeta "Mas elegida", H1/H2):
+     HEX: #0F172A  |  RGB: rgb(15, 23, 42)
+   - Celeste Marca (Palabra "MAS" del logo, iconos destacados, bordes y boton de plan destacado):
+     HEX: #6DA6C9  |  RGB: rgb(109, 166, 201)
+   - Celeste Marca Hover (Estado hover del boton en plan destacado):
+     HEX: #5B94B7  |  RGB: rgb(91, 148, 183)
+   - Azul Institucional / CTA Principal (Boton "Cotizar por WhatsApp", switches activos, botones 0800):
+     HEX: #21699B  |  RGB: rgb(33, 105, 155)
+   - Azul Institucional Hover (Estado hover del boton principal de cotizar):
+     HEX: #19527A  |  RGB: rgb(25, 82, 122)
+   - Azul Pildora Superior (Texto del badge "SEGUROS DE AUTOS Y MOTOS"):
+     HEX: #1E567C  |  RGB: rgb(30, 86, 124)
+
+C) TEXTOS Y NEUTROS:
+   - Negro Marca (Palabra "SOMOS" y "seguros" del logo sobre fondo claro):
+     HEX: #141414  |  RGB: rgb(20, 20, 20)
+   - Texto Principal (Titulos y valores seleccionados):
+     HEX: #0F172A  |  RGB: rgb(15, 23, 42)
+   - Texto Secundario / Parrafos (Subtitulos e items de lista):
+     HEX: #334155  |  RGB: rgb(51, 65, 85)
+   - Texto de Labels y Placeholders (Etiquetas en mayuscula y textos guia):
+     HEX: #64748B  |  RGB: rgb(100, 116, 139)
+   - Texto Atenuado (Subtitulos chicos y notas al pie):
+     HEX: #94A3B8  |  RGB: rgb(148, 163, 184)
+
+D) BORDES Y SEPARADORES:
+   - Borde Calido Suave (Tarjetas y divisores de seccion - Stone 200):
+     HEX: #E7E5E4  |  RGB: rgb(231, 229, 228)
+   - Borde Calido Medio (Header sticky y pildoras - Stone 300):
+     HEX: #D6D3D1  |  RGB: rgb(214, 211, 209)
+   - Borde de Inputs y Selects (Slate 300):
+     HEX: #CBD5E1  |  RGB: rgb(203, 213, 225)
+
+E) COLORES FUNCIONALES (WHATSAPP Y ESTADOS):
+   - Verde WhatsApp Oficial (Boton flotante):
+     HEX: #25D366  |  RGB: rgb(37, 211, 102)
+   - Verde WhatsApp Hover:
+     HEX: #1EBE5D  |  RGB: rgb(30, 190, 93)
+   - Verde Estado Activo (Punto pulsante en TopBar - Emerald 400):
+     HEX: #34D399  |  RGB: rgb(52, 211, 153)
+
+
+4. FORMA, BORDES REDONDEADOS Y SOMBRAS (UI TOKENS)
+--------------------------------------------------------------------------------
+- Tarjeta del Cotizador:
+  Border-radius: 28px
+  Sombra: 0 20px 50px rgba(15, 23, 42, 0.10)
+- Tarjetas de Planes (Coberturas):
+  Border-radius: 24px (1.5rem)
+- Contenedores de Logos y Tarjetas de Gruas:
+  Border-radius: 16px (1rem)
+- Campos del Formulario (Selects e Inputs):
+  Border-radius: 12px (0.75rem)
+  Tamaño de fuente: 16px en celular (evita auto-zoom en iOS) / 14px en PC
+  Foco (Focus ring): Borde #21699B + anillo de 3px rgba(33, 105, 155, 0.15)
+- Boton Principal (CTA) y Botones Flotantes:
+  Border-radius: 9999px (Formato pildora / rounded-full)
+================================================================================

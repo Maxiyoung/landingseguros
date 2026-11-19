@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
 import { MessageCircle, Calculator } from 'lucide-react';
+import { MENSAJES_WHATSAPP } from '../config';
 import { linkWhatsApp } from '../utils/whatsapp';
+import ExternalLink from './ui/ExternalLink';
 
 export default function BotonWhatsApp({ onIrAlCotizador }) {
   const [mostrarAtajoCotizador, setMostrarAtajoCotizador] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      // Muestra el botón flotante de "Ir al cotizador" cuando el usuario bajó más allá del Hero (~650px)
-      setMostrarAtajoCotizador(window.scrollY > 650);
+      setMostrarAtajoCotizador(window.scrollY > 620);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -17,32 +18,39 @@ export default function BotonWhatsApp({ onIrAlCotizador }) {
   }, []);
 
   return (
-    <div className="fixed bottom-5 right-4 sm:right-5 z-50 flex items-center gap-2.5">
-      {/* Atajo flotante para volver al cotizador cuando el usuario scrolleó hacia abajo */}
-      {mostrarAtajoCotizador && (
-        <button
-          type="button"
-          onClick={onIrAlCotizador}
-          className="bg-[#0F172A] hover:bg-[#21699B] text-white text-xs sm:text-sm font-bold px-4 py-3 rounded-full shadow-xl border border-slate-700/80 transition-all flex items-center gap-2 cursor-pointer"
-        >
-          <Calculator className="w-4 h-4 text-[#6DA6C9]" />
-          <span>Ir al Cotizador ↑</span>
-        </button>
-      )}
-
-      {/* Botón de WhatsApp con cartelito discreto en escritorio */}
-      <a
-        href={linkWhatsApp('Hola! Quiero hacer una consulta sobre seguros.')}
-        target="_blank"
-        rel="noreferrer"
-        aria-label="Chatear por WhatsApp"
-        className="group bg-[#25D366] hover:bg-[#1EBE5D] text-white p-3.5 sm:px-4 sm:py-3.5 rounded-full shadow-xl hover:scale-105 transition-all flex items-center gap-2"
+    <aside
+      aria-label="Accesos rápidos de contacto"
+      className="fixed bottom-4 sm:bottom-5 right-4 sm:right-5 z-50 flex items-center gap-2.5"
+    >
+      <button
+        type="button"
+        onClick={onIrAlCotizador}
+        aria-hidden={!mostrarAtajoCotizador}
+        tabIndex={mostrarAtajoCotizador ? 0 : -1}
+        className={`bg-[#0F172A]/95 backdrop-blur-md hover:bg-[#21699B] text-white text-xs sm:text-sm font-bold px-4 py-3 rounded-full shadow-[0_14px_30px_-8px_rgba(15,23,42,0.45)] border border-slate-700/80 transition-all duration-300 flex items-center gap-2 cursor-pointer ${
+          mostrarAtajoCotizador
+            ? 'opacity-100 translate-y-0 scale-100 pointer-events-auto'
+            : 'opacity-0 translate-y-3 scale-95 pointer-events-none'
+        }`}
       >
-        <MessageCircle className="w-6 h-6 fill-white shrink-0" />
-        <span className="hidden sm:inline text-xs font-bold tracking-wide pr-1">
+        <Calculator aria-hidden="true" className="w-4 h-4 text-[#6DA6C9]" />
+        <span>Ir al Cotizador ↑</span>
+      </button>
+
+      <ExternalLink
+        href={linkWhatsApp(MENSAJES_WHATSAPP.consultaGeneral)}
+        aria-label="Chatear por WhatsApp"
+        className="relative group bg-[#25D366] hover:bg-[#1EBE5D] text-[#0F172A] p-3.5 sm:px-4 sm:py-3.5 rounded-full shadow-[0_12px_28px_-6px_rgba(37,211,102,0.45)] hover:shadow-[0_16px_34px_-6px_rgba(37,211,102,0.58)] hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2"
+      >
+        <span
+          aria-hidden="true"
+          className="motion-safe:animate-ping absolute inset-0 rounded-full bg-[#25D366] opacity-20 pointer-events-none"
+        />
+        <MessageCircle aria-hidden="true" className="relative w-6 h-6 text-[#0F172A] shrink-0" />
+        <span className="relative hidden sm:inline text-xs font-extrabold tracking-wide pr-1">
           WhatsApp Directo
         </span>
-      </a>
-    </div>
+      </ExternalLink>
+    </aside>
   );
 }
