@@ -2,6 +2,10 @@ import { useId, useMemo, useRef, useState } from 'react';
 import { Car, Bike, MessageCircle, FileText, Lock, CheckCircle2, AlertCircle } from 'lucide-react';
 import SelectorVehiculo from './SelectorVehiculo';
 import SearchableSelect from '../ui/SearchableSelect';
+import SegmentedControl from '../ui/SegmentedControl';
+import ExternalLink from '../ui/ExternalLink';
+import { getFieldInputClass } from '../ui/formStyles';
+import { LIMITES_FORMULARIO, MENSAJES_WHATSAPP } from '../../config';
 import {
   MARCAS_AUTOS_AR,
   MARCAS_MOTOS_AR,
@@ -11,7 +15,43 @@ import {
   LOCALIDADES_CORDOBA
 } from '../../data/vehiculos';
 import { COBERTURAS_POR_RAMO } from '../../data/coberturas';
-import { armarMensajeCotizacion, linkWhatsApp } from '../../utils/whatsapp';
+import {
+  abrirWhatsAppEnNuevaPestana,
+  armarMensajeCotizacion,
+  linkWhatsApp
+} from '../../utils/whatsapp';
+
+const RAMO_OPTIONS = [
+  { value: 'auto', label: 'Cotizar Auto', icon: Car },
+  { value: 'moto', label: 'Cotizar Moto', icon: Bike }
+];
+
+const RAMO_SELECTOR_CONFIG = {
+  auto: {
+    catalogoMarcas: MARCAS_AUTOS_AR,
+    labelMarca: 'Marca del auto',
+    placeholderMarca: 'Seleccioná la marca...',
+    placeholderOtraMarca: 'Escribí la marca (Ej: Mitsubishi, Subaru, Volvo...)',
+    placeholderModeloDirecto: 'Escribí el modelo (Ej: Lancer, Forester, XC60...)'
+  },
+  moto: {
+    catalogoMarcas: MARCAS_MOTOS_AR,
+    labelMarca: 'Marca de la moto',
+    placeholderMarca: 'Seleccioná la marca...',
+    placeholderOtraMarca: 'Escribí la marca (Ej: Benelli, Royal Enfield, KTM...)',
+    placeholderModeloDirecto: 'Escribí el modelo (Ej: TNT 15, Classic 350, Duke 200...)'
+  }
+};
+
+const GNC_OPTIONS = [
+  { value: 'si', label: 'Sí' },
+  { value: 'no', label: 'No' }
+];
+
+const CILINDRADA_OPTIONS = [
+  { value: 'Hasta 250cc', label: 'Hasta 250cc' },
+  { value: 'Más de 250cc', label: 'Más de 250cc' }
+];
 
 export default function Cotizador({
   ramo,
@@ -89,8 +129,14 @@ export default function Cotizador({
     if (datosRamo.modelo === 'OTRO' && !datosRamo.otroModelo.trim()) nextErrors.otroModelo = true;
     if (!formData.anio) nextErrors.anio = true;
     if (formData.anio === 'OTRO') {
-      const anioNum = Number(formData.otroAnio.trim());
-      if (!formData.otroAnio.trim() || Number.isNaN(anioNum) || anioNum < 1950 || anioNum >= ANIO_MINIMO_LISTA) {
+      const anioStr = formData.otroAnio.trim();
+      const anioNum = Number(anioStr);
+      if (
+        !anioStr ||
+        !Number.isInteger(anioNum) ||
+        anioNum < LIMITES_FORMULARIO.anioMinimo ||
+        anioNum >= ANIO_MINIMO_LISTA
+      ) {
         nextErrors.otroAnio = true;
       }
     }
@@ -106,18 +152,14 @@ export default function Cotizador({
     }
 
     setErrors({});
-    const url = linkWhatsApp(armarMensajeCotizacion(ramo, formData));
-    const win = window.open(url, '_blank', 'noopener,noreferrer');
-    if (!win) {
-      window.location.href = url;
-    }
+    abrirWhatsAppEnNuevaPestana(armarMensajeCotizacion(ramo, formData));
   };
 
   const hasValidationErrors = Object.values(errors).some(Boolean);
+  const selectorConfig = RAMO_SELECTOR_CONFIG[ramo];
 
   return (
     <div className="relative">
-      {/* Halo ambiental sutil detrás de la tarjeta */}
       <div
         aria-hidden="true"
         className="absolute -inset-2 rounded-[34px] bg-gradient-to-br from-[#6DA6C9]/22 via-transparent to-[#21699B]/18 blur-xl opacity-75 pointer-events-none"
@@ -130,7 +172,6 @@ export default function Cotizador({
             : 'border-stone-200/90 shadow-[0_24px_60px_-15px_rgba(15,23,42,0.14),0_4px_16px_-4px_rgba(15,23,42,0.05)]'
         }`}
       >
-        {/* Filete superior redondeado */}
         <div className="overflow-hidden rounded-t-[27px]">
           <div
             aria-hidden="true"
@@ -139,76 +180,37 @@ export default function Cotizador({
         </div>
 
         <div className="p-5 sm:p-7">
-          {/* PESTAÑAS DE RAMO CON INDICADOR DESLIZANTE */}
-          <div
-            className="relative grid grid-cols-2 p-1.5 bg-[#F5F2EB] rounded-2xl border border-stone-200/90 mb-4"
-            role="tablist"
-            aria-label="Seleccionar tipo de vehículo"
-          >
-            <span
-              aria-hidden="true"
-              className={`absolute top-1.5 bottom-1.5 left-1.5 w-[calc(50%-6px)] rounded-xl bg-[#0F172A] shadow-[0_6px_16px_-4px_rgba(15,23,42,0.38)] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                ramo === 'moto' ? 'translate-x-full' : 'translate-x-0'
-              }`}
-            />
-            <button
-              type="button"
-              role="tab"
-              aria-selected={ramo === 'auto'}
-              onClick={() => {
-                setErrors({});
-                onRamoChange('auto');
-              }}
-              className={`relative z-10 flex items-center justify-center gap-2 py-3 px-3 rounded-xl text-sm font-bold transition-colors duration-200 cursor-pointer ${
-                ramo === 'auto' ? 'text-white' : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <Car
-                className={`w-4 h-4 transition-colors ${
-                  ramo === 'auto' ? 'text-[#6DA6C9]' : 'text-slate-500'
-                }`}
-              />
-              <span>Cotizar Auto</span>
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={ramo === 'moto'}
-              onClick={() => {
-                setErrors({});
-                onRamoChange('moto');
-              }}
-              className={`relative z-10 flex items-center justify-center gap-2 py-3 px-3 rounded-xl text-sm font-bold transition-colors duration-200 cursor-pointer ${
-                ramo === 'moto' ? 'text-white' : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <Bike
-                className={`w-4 h-4 transition-colors ${
-                  ramo === 'moto' ? 'text-[#6DA6C9]' : 'text-slate-500'
-                }`}
-              />
-              <span>Cotizar Moto</span>
-            </button>
-          </div>
+          <SegmentedControl
+            options={RAMO_OPTIONS}
+            value={ramo}
+            onChange={(nuevoRamo) => {
+              setErrors({});
+              onRamoChange(nuevoRamo);
+            }}
+            variant="card"
+            mode="radiogroup"
+            ariaLabel="Seleccionar tipo de vehículo"
+            className="grid w-full mb-4"
+          />
 
           {/* Barra de progreso compacta */}
           <div className="mb-4 space-y-1.5">
             <div className="flex items-center justify-between text-[11px] font-semibold">
-              <div className="flex items-center gap-2 text-slate-500">
+              <div className="flex items-center gap-2 text-slate-600">
                 <span className={pasoVehiculoListo ? 'text-[#0F172A]' : ''}>1. Vehículo</span>
-                <span aria-hidden="true" className="text-stone-300">·</span>
+                <span aria-hidden="true" className="text-stone-400">·</span>
                 <span className={pasoAnioYZonaListo ? 'text-[#0F172A]' : ''}>2. Año y zona</span>
-                <span aria-hidden="true" className="text-stone-300">·</span>
+                <span aria-hidden="true" className="text-stone-400">·</span>
                 <span className="text-[#0F172A]">3. Plan</span>
               </div>
               <span
                 className={`inline-flex items-center gap-1 transition-colors ${
-                  isFormReady ? 'text-emerald-700 font-bold' : 'text-slate-500'
+                  isFormReady ? 'text-emerald-700 font-bold' : 'text-slate-600'
                 }`}
               >
                 {isFormReady ? (
                   <>
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                    <CheckCircle2 aria-hidden="true" className="w-3.5 h-3.5 text-emerald-600" />
                     <span>Listo</span>
                   </>
                 ) : (
@@ -230,49 +232,26 @@ export default function Cotizador({
 
           <form onSubmit={handleSubmit} noValidate className="space-y-3.5">
             <div key={ramo} className="relative z-30 space-y-3.5 animate-panel-in">
-              {ramo === 'auto' ? (
-                <SelectorVehiculo
-                  catalogoMarcas={MARCAS_AUTOS_AR}
-                  datos={formData.auto}
-                  errors={errors}
-                  onChange={(nuevoAuto) => {
-                    setFormData({ ...formData, auto: nuevoAuto });
-                    setErrors((prev) => ({
-                      ...prev,
-                      marca: false,
-                      otraMarca: false,
-                      modelo: false,
-                      otroModelo: false
-                    }));
-                  }}
-                  marcaSelectRef={marcaSelectRef}
-                  labelMarca="Marca del auto"
-                  placeholderMarca="Seleccioná la marca..."
-                  placeholderOtraMarca="Escribí la marca (Ej: Mitsubishi, Subaru, Volvo...)"
-                  placeholderModeloDirecto="Escribí el modelo (Ej: Lancer, Forester, XC60...)"
-                />
-              ) : (
-                <SelectorVehiculo
-                  catalogoMarcas={MARCAS_MOTOS_AR}
-                  datos={formData.moto}
-                  errors={errors}
-                  onChange={(nuevaMoto) => {
-                    setFormData({ ...formData, moto: nuevaMoto });
-                    setErrors((prev) => ({
-                      ...prev,
-                      marca: false,
-                      otraMarca: false,
-                      modelo: false,
-                      otroModelo: false
-                    }));
-                  }}
-                  marcaSelectRef={marcaSelectRef}
-                  labelMarca="Marca de la moto"
-                  placeholderMarca="Seleccioná la marca..."
-                  placeholderOtraMarca="Escribí la marca (Ej: Benelli, Royal Enfield, KTM...)"
-                  placeholderModeloDirecto="Escribí el modelo (Ej: TNT 15, Classic 350, Duke 200...)"
-                />
-              )}
+              <SelectorVehiculo
+                catalogoMarcas={selectorConfig.catalogoMarcas}
+                datos={datosRamo}
+                errors={errors}
+                onChange={(nuevoVehiculo) => {
+                  setFormData({ ...formData, [ramo]: nuevoVehiculo });
+                  setErrors((prev) => ({
+                    ...prev,
+                    marca: false,
+                    otraMarca: false,
+                    modelo: false,
+                    otroModelo: false
+                  }));
+                }}
+                marcaSelectRef={marcaSelectRef}
+                labelMarca={selectorConfig.labelMarca}
+                placeholderMarca={selectorConfig.placeholderMarca}
+                placeholderOtraMarca={selectorConfig.placeholderOtraMarca}
+                placeholderModeloDirecto={selectorConfig.placeholderModeloDirecto}
+              />
             </div>
 
             {/* Fila compacta: Año (5 col) + Localidad (7 col) */}
@@ -348,18 +327,19 @@ export default function Cotizador({
                 <input
                   ref={otroAnioInputRef}
                   type="number"
-                  min="1960"
+                  min={LIMITES_FORMULARIO.anioMinimo}
                   max={ANIO_MINIMO_LISTA - 1}
                   aria-label={`Escribir año anterior a ${ANIO_MINIMO_LISTA}`}
                   placeholder="Escribí el año del vehículo (Ej: 1992)"
                   value={formData.otroAnio}
                   onChange={(e) => {
                     clearError('otroAnio');
-                    setFormData({ ...formData, otroAnio: e.target.value });
+                    setFormData({ ...formData, otroAnio: e.target.value.slice(0, 4) });
                   }}
-                  className={`w-full px-4 py-3 rounded-xl border bg-white focus:ring-3 focus:ring-[#21699B]/15 outline-none transition-all text-base sm:text-sm text-slate-900 placeholder:text-slate-400 ${
-                    errors.otroAnio ? 'border-rose-400 ring-3 ring-rose-400/15' : 'border-[#21699B]'
-                  }`}
+                  className={getFieldInputClass({
+                    invalid: Boolean(errors.otroAnio),
+                    accentFocus: true
+                  })}
                 />
               </div>
             )}
@@ -369,6 +349,7 @@ export default function Cotizador({
                 <input
                   ref={otraLocalidadInputRef}
                   type="text"
+                  maxLength={LIMITES_FORMULARIO.localidadMaxLength}
                   aria-label="Escribir otra localidad"
                   placeholder="Escribí tu ciudad o localidad (Ej: Oncativo, Laboulaye...)"
                   value={formData.otraLocalidad || ''}
@@ -376,87 +357,46 @@ export default function Cotizador({
                     clearError('otraLocalidad');
                     setFormData({ ...formData, otraLocalidad: e.target.value });
                   }}
-                  className={`w-full px-4 py-3 rounded-xl border bg-white focus:ring-3 focus:ring-[#21699B]/15 outline-none transition-all text-base sm:text-sm text-slate-900 placeholder:text-slate-400 ${
-                    errors.otraLocalidad ? 'border-rose-400 ring-3 ring-rose-400/15' : 'border-[#21699B]'
-                  }`}
+                  className={getFieldInputClass({
+                    invalid: Boolean(errors.otraLocalidad),
+                    accentFocus: true
+                  })}
                 />
               </div>
             )}
 
-            {/* Switch deslizante GNC (Auto) / Cilindrada (Moto) */}
             {ramo === 'auto' ? (
-              <div className="flex items-center justify-between py-1 px-1">
+              <div className="flex flex-wrap items-center justify-between gap-2 py-1 px-1">
                 <span id={`${idPrefix}-gnc-label`} className="text-sm font-semibold text-slate-800">
                   ¿Tiene GNC?
                 </span>
-                <div
-                  role="radiogroup"
-                  aria-labelledby={`${idPrefix}-gnc-label`}
-                  className="relative inline-grid grid-cols-2 rounded-full border border-slate-300/90 p-0.5 bg-[#F5F2EB]"
-                >
-                  <span
-                    aria-hidden="true"
-                    className={`absolute top-0.5 bottom-0.5 left-0.5 w-[calc(50%-2px)] rounded-full bg-[#21699B] shadow-xs transition-transform duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                      formData.gnc ? 'translate-x-0' : 'translate-x-full'
-                    }`}
-                  />
-                  <button
-                    type="button"
-                    role="radio"
-                    aria-checked={formData.gnc}
-                    onClick={() => setFormData({ ...formData, gnc: true })}
-                    className={`relative z-10 px-5 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer ${
-                      formData.gnc ? 'text-white' : 'text-slate-600 hover:text-slate-900'
-                    }`}
-                  >
-                    Sí
-                  </button>
-                  <button
-                    type="button"
-                    role="radio"
-                    aria-checked={!formData.gnc}
-                    onClick={() => setFormData({ ...formData, gnc: false })}
-                    className={`relative z-10 px-5 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer ${
-                      !formData.gnc ? 'text-white' : 'text-slate-600 hover:text-slate-900'
-                    }`}
-                  >
-                    No
-                  </button>
-                </div>
+                <SegmentedControl
+                  options={GNC_OPTIONS}
+                  value={formData.gnc ? 'si' : 'no'}
+                  onChange={(val) => setFormData({ ...formData, gnc: val === 'si' })}
+                  variant="mini"
+                  mode="radiogroup"
+                  ariaLabelledBy={`${idPrefix}-gnc-label`}
+                  buttonClassName="px-5"
+                />
               </div>
             ) : (
-              <div className="flex items-center justify-between gap-2 py-1 px-1">
-                <span id={`${idPrefix}-cil-label`} className="text-sm font-semibold text-slate-800 shrink-0">
+              <div className="flex flex-wrap items-center justify-between gap-2 py-1 px-1">
+                <span
+                  id={`${idPrefix}-cil-label`}
+                  className="text-sm font-semibold text-slate-800 shrink-0"
+                >
                   Cilindrada
                 </span>
-                <div
-                  role="radiogroup"
-                  aria-labelledby={`${idPrefix}-cil-label`}
-                  className="relative inline-grid grid-cols-2 rounded-full border border-slate-300/90 p-0.5 bg-[#F5F2EB]"
-                >
-                  <span
-                    aria-hidden="true"
-                    className={`absolute top-0.5 bottom-0.5 left-0.5 w-[calc(50%-2px)] rounded-full bg-[#21699B] shadow-xs transition-transform duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                      formData.cilindrada === 'Más de 250cc' ? 'translate-x-full' : 'translate-x-0'
-                    }`}
-                  />
-                  {['Hasta 250cc', 'Más de 250cc'].map((cil) => (
-                    <button
-                      key={cil}
-                      type="button"
-                      role="radio"
-                      aria-checked={formData.cilindrada === cil}
-                      onClick={() => setFormData({ ...formData, cilindrada: cil })}
-                      className={`relative z-10 px-2.5 sm:px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-bold transition-colors cursor-pointer whitespace-nowrap ${
-                        formData.cilindrada === cil
-                          ? 'text-white'
-                          : 'text-slate-600 hover:text-slate-900'
-                      }`}
-                    >
-                      {cil}
-                    </button>
-                  ))}
-                </div>
+                <SegmentedControl
+                  options={CILINDRADA_OPTIONS}
+                  value={formData.cilindrada}
+                  onChange={(val) => setFormData({ ...formData, cilindrada: val })}
+                  variant="mini"
+                  mode="radiogroup"
+                  ariaLabelledBy={`${idPrefix}-cil-label`}
+                  buttonClassName="px-2.5 sm:px-3.5 text-[11px] sm:text-xs"
+                />
               </div>
             )}
 
@@ -490,7 +430,7 @@ export default function Cotizador({
                 role="alert"
                 className="animate-field-in flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 font-medium"
               >
-                <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+                <AlertCircle aria-hidden="true" className="w-4 h-4 shrink-0 text-rose-600" />
                 <span>Completá los campos marcados para armar tu cotización exacta.</span>
               </div>
             )}
@@ -504,7 +444,7 @@ export default function Cotizador({
                 }`}
               >
                 <span className="truncate">
-                  <span className="text-slate-500">
+                  <span className="text-slate-600">
                     {isFormReady ? 'Listo para cotizar: ' : 'Tu consulta: '}
                   </span>
                   <strong className="text-[#0F172A]">
@@ -528,29 +468,25 @@ export default function Cotizador({
                   : 'shadow-[0_12px_28px_-8px_rgba(33,105,155,0.5)] hover:shadow-[0_16px_32px_-6px_rgba(33,105,155,0.65)]'
               }`}
             >
-              <MessageCircle className="w-5 h-5" />
+              <MessageCircle aria-hidden="true" className="w-5 h-5" />
               <span>
                 {ramo === 'auto' ? 'Cotizar Auto por WhatsApp' : 'Cotizar Moto por WhatsApp'}
               </span>
             </button>
 
-            <p className="flex items-center justify-center gap-1.5 text-[11px] text-slate-500 text-center">
-              <Lock className="w-3 h-3 text-[#21699B] shrink-0" />
+            <p className="flex items-center justify-center gap-1.5 text-[11px] text-slate-600 text-center">
+              <Lock aria-hidden="true" className="w-3 h-3 text-[#21699B] shrink-0" />
               <span>Sin compromiso ni spam · Atención directa con tu productor</span>
             </p>
 
             <div className="pt-0.5 text-center lg:hidden">
-              <a
-                href={linkWhatsApp(
-                  'Hola! Te mando foto de mi póliza actual para ver si podemos mejorar el precio.'
-                )}
-                target="_blank"
-                rel="noreferrer"
+              <ExternalLink
+                href={linkWhatsApp(MENSAJES_WHATSAPP.revisarPoliza)}
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#21699B] hover:underline"
               >
-                <FileText className="w-3.5 h-3.5" />
+                <FileText aria-hidden="true" className="w-3.5 h-3.5" />
                 <span>¿Ya tenés seguro? Mandá foto de tu póliza y mejoramos el costo</span>
-              </a>
+              </ExternalLink>
             </div>
           </form>
         </div>

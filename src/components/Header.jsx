@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { MessageCircle } from 'lucide-react';
 import BrandLogo from './BrandLogo';
+import ExternalLink from './ui/ExternalLink';
+import { MENSAJES_WHATSAPP } from '../config';
 import { linkWhatsApp } from '../utils/whatsapp';
 
 const NAV_LINKS = [
@@ -42,15 +44,16 @@ export default function Header() {
           ))}
         </nav>
 
-        <a
-          href={linkWhatsApp('Hola! Quiero cotizar el seguro de mi vehículo.')}
-          target="_blank"
-          rel="noreferrer"
+        <ExternalLink
+          href={linkWhatsApp(MENSAJES_WHATSAPP.contactoDirecto)}
           className="group inline-flex items-center gap-2 bg-[#0F172A] hover:bg-[#21699B] text-white text-xs sm:text-sm font-semibold px-4 sm:px-5 py-2.5 rounded-full shadow-[0_6px_18px_-6px_rgba(15,23,42,0.45)] hover:shadow-[0_10px_22px_-6px_rgba(33,105,155,0.5)] hover:-translate-y-0.5 active:translate-y-0 ring-1 ring-white/10 transition-all duration-200"
         >
-          <MessageCircle className="w-4 h-4 text-[#6DA6C9] group-hover:text-white group-hover:scale-110 transition-all duration-200" />
+          <MessageCircle
+            aria-hidden="true"
+            className="w-4 h-4 text-[#6DA6C9] group-hover:text-white group-hover:scale-110 transition-all duration-200"
+          />
           <span>WhatsApp Directo</span>
-        </a>
+        </ExternalLink>
       </div>
     </header>
   );

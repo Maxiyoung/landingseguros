@@ -1,5 +1,7 @@
 import { useId, useMemo, useRef } from 'react';
+import { LIMITES_FORMULARIO } from '../../config';
 import SearchableSelect from '../ui/SearchableSelect';
+import { getFieldInputClass } from '../ui/formStyles';
 
 export default function SelectorVehiculo({
   catalogoMarcas,
@@ -71,13 +73,15 @@ export default function SelectorVehiculo({
             id={otraMarcaId}
             ref={otraMarcaInputRef}
             type="text"
+            maxLength={LIMITES_FORMULARIO.marcaMaxLength}
             aria-label="Escribir otra marca"
             placeholder={placeholderOtraMarca}
             value={datos.otraMarca}
             onChange={(e) => onChange({ ...datos, otraMarca: e.target.value })}
-            className={`w-full px-4 py-3 rounded-xl border bg-white focus:ring-3 focus:ring-[#21699B]/15 outline-none transition-all text-base sm:text-sm text-slate-900 placeholder:text-slate-400 ${
-              errors.otraMarca ? 'border-rose-400 ring-3 ring-rose-400/15' : 'border-[#21699B]'
-            }`}
+            className={getFieldInputClass({
+              invalid: Boolean(errors.otraMarca),
+              accentFocus: true
+            })}
           />
         </div>
       )}
@@ -93,13 +97,12 @@ export default function SelectorVehiculo({
           <input
             id={otroModeloId}
             type="text"
+            maxLength={LIMITES_FORMULARIO.modeloMaxLength}
             aria-label="Escribir modelo"
             placeholder={placeholderModeloDirecto}
             value={datos.otroModelo}
             onChange={(e) => onChange({ ...datos, otroModelo: e.target.value })}
-            className={`w-full px-4 py-3 rounded-xl border bg-[#FAF9F6] hover:bg-white focus:bg-white focus:border-[#21699B] focus:ring-3 focus:ring-[#21699B]/15 outline-none transition-all text-base sm:text-sm text-slate-900 placeholder:text-slate-500 animate-field-in ${
-              errors.modelo ? 'border-rose-400 ring-3 ring-rose-400/15' : 'border-slate-300/90'
-            }`}
+            className={`${getFieldInputClass({ invalid: Boolean(errors.modelo) })} animate-field-in`}
           />
         ) : (
           <div className="space-y-2.5">
@@ -138,13 +141,15 @@ export default function SelectorVehiculo({
                 id={otroModeloId}
                 ref={otroModeloInputRef}
                 type="text"
+                maxLength={LIMITES_FORMULARIO.modeloMaxLength}
                 aria-label="Escribir otro modelo"
                 placeholder={`Escribí qué modelo de ${datos.marca} tenés...`}
                 value={datos.otroModelo}
                 onChange={(e) => onChange({ ...datos, otroModelo: e.target.value })}
-                className={`w-full px-4 py-3 rounded-xl border bg-white focus:ring-3 focus:ring-[#21699B]/15 outline-none transition-all text-base sm:text-sm text-slate-900 placeholder:text-slate-400 animate-field-in ${
-                  errors.otroModelo ? 'border-rose-400 ring-3 ring-rose-400/15' : 'border-[#21699B]'
-                }`}
+                className={`${getFieldInputClass({
+                  invalid: Boolean(errors.otroModelo),
+                  accentFocus: true
+                })} animate-field-in`}
               />
             )}
           </div>

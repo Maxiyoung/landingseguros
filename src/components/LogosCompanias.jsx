@@ -16,10 +16,12 @@ function LogoCard({ comp, spanFullMobile }) {
           <img
             src={comp.logo}
             alt={comp.nombre}
+            width={comp.width}
+            height={comp.height}
             loading="lazy"
             decoding="async"
             onError={() => setImgError(true)}
-            className="max-h-11 sm:max-h-12 max-w-[148px] w-auto object-contain rounded-lg transition-transform duration-300 group-hover:scale-[1.03]"
+            className="max-h-11 sm:max-h-12 max-w-[148px] w-auto h-auto object-contain rounded-lg transition-transform duration-300 group-hover:scale-[1.03]"
           />
         ) : (
           <span className="font-serif-brand font-bold text-slate-800 text-base text-center">
@@ -29,7 +31,7 @@ function LogoCard({ comp, spanFullMobile }) {
       </div>
 
       {comp.tag && (
-        <span className="mt-2.5 text-[10px] font-medium text-slate-500 text-center leading-tight line-clamp-1 group-hover:text-[#1E567C] transition-colors">
+        <span className="mt-2.5 text-[10px] font-medium text-slate-600 text-center leading-tight line-clamp-1 group-hover:text-[#1E567C] transition-colors">
           {comp.tag}
         </span>
       )}
@@ -42,9 +44,9 @@ export default function LogosCompanias() {
     <section className="relative z-10 bg-white/80 backdrop-blur-sm">
       <div aria-hidden="true" className="section-divider" />
       <Reveal className="max-w-5xl mx-auto px-4 sm:px-6 py-9 sm:py-11">
-        <p className="text-center text-[11px] font-bold uppercase tracking-[0.2em] text-slate-600 mb-5">
+        <h2 className="font-sans text-center text-[11px] font-bold uppercase tracking-[0.2em] text-slate-600 mb-5">
           Cotizamos en compañías de primera línea
-        </p>
+        </h2>
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
           {COMPANIAS.map((comp, idx) => (
             <LogoCard

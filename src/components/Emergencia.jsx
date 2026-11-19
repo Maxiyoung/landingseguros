@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { Wrench, AlertTriangle, PhoneCall, MessageCircle } from 'lucide-react';
 import { COMPANIAS } from '../data/companias';
+import { MENSAJES_WHATSAPP } from '../config';
 import { linkWhatsApp } from '../utils/whatsapp';
 import Reveal from './ui/Reveal';
+import SegmentedControl from './ui/SegmentedControl';
+import ExternalLink from './ui/ExternalLink';
 
 const PASOS_SINIESTRO = [
   {
@@ -23,7 +26,28 @@ const PASOS_SINIESTRO = [
 ];
 
 export default function Emergencia() {
+  const idPrefix = useId();
   const [activeTab, setActiveTab] = useState('grua');
+  const panelId = `${idPrefix}-panel`;
+
+  const tabOptions = [
+    {
+      id: `${idPrefix}-tab-grua`,
+      value: 'grua',
+      label: 'Teléfonos de Grúa',
+      icon: Wrench,
+      iconClassName: 'w-3.5 h-3.5',
+      controls: panelId
+    },
+    {
+      id: `${idPrefix}-tab-choque`,
+      value: 'choque',
+      label: 'Qué hacer si chocás',
+      icon: AlertTriangle,
+      iconClassName: 'w-3.5 h-3.5',
+      controls: panelId
+    }
+  ];
 
   return (
     <section id="emergencia" className="scroll-mt-24 bg-white">
@@ -39,117 +63,97 @@ export default function Emergencia() {
             </h2>
           </div>
 
-          <div
-            role="tablist"
-            aria-label="Asistencia y siniestros"
-            className="relative inline-grid grid-cols-2 p-1 bg-[#F5F2EB] rounded-full border border-stone-200/90 self-start sm:self-auto"
-          >
-            <span
-              aria-hidden="true"
-              className={`absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] rounded-full bg-[#0F172A] shadow-xs transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                activeTab === 'choque' ? 'translate-x-full' : 'translate-x-0'
-              }`}
-            />
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === 'grua'}
-              onClick={() => setActiveTab('grua')}
-              className={`relative z-10 flex items-center justify-center gap-1.5 px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-colors cursor-pointer ${
-                activeTab === 'grua' ? 'text-white' : 'text-slate-700 hover:text-slate-900'
-              }`}
-            >
-              <Wrench className="w-3.5 h-3.5 text-[#6DA6C9] shrink-0" />
-              <span>Teléfonos de Grúa</span>
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === 'choque'}
-              onClick={() => setActiveTab('choque')}
-              className={`relative z-10 flex items-center justify-center gap-1.5 px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-colors cursor-pointer ${
-                activeTab === 'choque' ? 'text-white' : 'text-slate-700 hover:text-slate-900'
-              }`}
-            >
-              <AlertTriangle className="w-3.5 h-3.5 text-[#6DA6C9] shrink-0" />
-              <span>Qué hacer si chocás</span>
-            </button>
-          </div>
+          <SegmentedControl
+            options={tabOptions}
+            value={activeTab}
+            onChange={setActiveTab}
+            variant="pillCream"
+            mode="tablist"
+            ariaLabel="Asistencia y siniestros"
+            className="self-start sm:self-auto"
+          />
         </div>
 
-        {activeTab === 'grua' ? (
-          <div key="grua" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 animate-panel-in">
-            {COMPANIAS.map((c, idx) => (
-              <div
-                key={c.nombre}
-                className={`group bg-[#FAF8F5] hover:bg-white p-4 rounded-2xl border border-stone-200/90 hover:border-[#6DA6C9] shadow-[0_2px_10px_-6px_rgba(15,23,42,0.05)] hover:shadow-[0_14px_28px_-14px_rgba(33,105,155,0.2)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between items-center text-center gap-3.5 ${
-                  idx === COMPANIAS.length - 1 ? 'sm:col-span-2 lg:col-span-1' : ''
-                }`}
-              >
-                <div className="space-y-1">
-                  <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200/70 px-2.5 py-0.5 rounded-full">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
-                    24 hs
-                  </span>
-                  <span className="font-serif-brand font-bold text-base text-[#0F172A] block pt-1">
-                    {c.nombre}
-                  </span>
-                </div>
-                {c.grua ? (
-                  <a
-                    href={`tel:${c.grua.replace(/-/g, '')}`}
-                    className="w-full bg-[#21699B] hover:bg-[#19527A] text-white font-bold py-2.5 px-3 rounded-xl text-xs sm:text-sm shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-1.5"
-                  >
-                    <PhoneCall className="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-12" />
-                    <span>{c.grua}</span>
-                  </a>
-                ) : (
-                  <span className="w-full bg-stone-200 text-slate-600 font-semibold py-2.5 px-3 rounded-xl text-xs">
-                    Consultá tu póliza
-                  </span>
-                )}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div key="choque" className="space-y-4 animate-panel-in">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-[#F5F2EB] p-4 sm:p-5 rounded-3xl border border-stone-200/90">
-              {PASOS_SINIESTRO.map((paso) => (
+        <div
+          id={panelId}
+          role="tabpanel"
+          aria-labelledby={`${idPrefix}-tab-${activeTab}`}
+        >
+          {activeTab === 'grua' ? (
+            <div key="grua" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 animate-panel-in">
+              {COMPANIAS.map((c, idx) => (
                 <div
-                  key={paso.numero}
-                  className="bg-white p-5 rounded-2xl border border-stone-200/80 shadow-[0_2px_12px_-6px_rgba(15,23,42,0.06)] relative overflow-hidden"
+                  key={c.nombre}
+                  className={`group bg-[#FAF8F5] hover:bg-white p-4 rounded-2xl border border-stone-200/90 hover:border-[#6DA6C9] shadow-[0_2px_10px_-6px_rgba(15,23,42,0.05)] hover:shadow-[0_14px_28px_-14px_rgba(33,105,155,0.2)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between items-center text-center gap-3.5 ${
+                    idx === COMPANIAS.length - 1 ? 'sm:col-span-2 lg:col-span-1' : ''
+                  }`}
                 >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[11px] font-bold tracking-wider text-[#21699B]">
-                      {paso.numero.replace(/^0/, '')}. {paso.titulo}
+                  <div className="space-y-1">
+                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200/70 px-2.5 py-0.5 rounded-full">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
+                      24 hs
                     </span>
-                    <span
-                      aria-hidden="true"
-                      className="font-serif-brand font-bold text-2xl leading-none text-stone-200 select-none"
-                    >
-                      {paso.numero}
+                    <span className="font-serif-brand font-bold text-base text-[#0F172A] block pt-1">
+                      {c.nombre}
                     </span>
                   </div>
-                  <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
-                    {paso.texto}
-                  </p>
+                  {c.grua ? (
+                    <a
+                      href={`tel:${c.grua.replace(/-/g, '')}`}
+                      className="w-full bg-[#21699B] hover:bg-[#19527A] text-white font-bold py-2.5 px-3 rounded-xl text-xs sm:text-sm shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-1.5"
+                    >
+                      <PhoneCall
+                        aria-hidden="true"
+                        className="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-12"
+                      />
+                      <span>{c.grua}</span>
+                    </a>
+                  ) : (
+                    <span className="w-full bg-stone-200 text-slate-600 font-semibold py-2.5 px-3 rounded-xl text-xs">
+                      Consultá tu póliza
+                    </span>
+                  )}
                 </div>
               ))}
             </div>
+          ) : (
+            <div key="choque" className="space-y-4 animate-panel-in">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-[#F5F2EB] p-4 sm:p-5 rounded-3xl border border-stone-200/90">
+                {PASOS_SINIESTRO.map((paso) => (
+                  <div
+                    key={paso.numero}
+                    className="bg-white p-5 rounded-2xl border border-stone-200/80 shadow-[0_2px_12px_-6px_rgba(15,23,42,0.06)] relative overflow-hidden"
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[11px] font-bold tracking-wider text-[#21699B]">
+                        {paso.numero.replace(/^0/, '')}. {paso.titulo}
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className="font-serif-brand font-bold text-2xl leading-none text-stone-300 select-none"
+                      >
+                        {paso.numero}
+                      </span>
+                    </div>
+                    <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                      {paso.texto}
+                    </p>
+                  </div>
+                ))}
+              </div>
 
-            <div className="flex justify-center sm:justify-end">
-              <a
-                href={linkWhatsApp('Hola! Tuve un siniestro y necesito hacer la denuncia.')}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 bg-[#0F172A] hover:bg-[#21699B] text-white text-xs sm:text-sm font-semibold px-5 py-2.5 rounded-full shadow-sm transition-all"
-              >
-                <MessageCircle className="w-4 h-4 text-[#6DA6C9]" />
-                <span>Enviar denuncia por WhatsApp</span>
-              </a>
+              <div className="flex justify-center sm:justify-end">
+                <ExternalLink
+                  href={linkWhatsApp(MENSAJES_WHATSAPP.denunciaSiniestro)}
+                  className="inline-flex items-center gap-2 bg-[#0F172A] hover:bg-[#21699B] text-white text-xs sm:text-sm font-semibold px-5 py-2.5 rounded-full shadow-sm transition-all"
+                >
+                  <MessageCircle aria-hidden="true" className="w-4 h-4 text-[#6DA6C9]" />
+                  <span>Enviar denuncia por WhatsApp</span>
+                </ExternalLink>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </Reveal>
     </section>
   );

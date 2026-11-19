@@ -1,6 +1,7 @@
 import { CheckCircle2, FileText, ChevronRight, BadgeCheck } from 'lucide-react';
 import Cotizador from './cotizador/Cotizador';
-import { PRODUCTOR } from '../config';
+import ExternalLink from './ui/ExternalLink';
+import { MENSAJES_WHATSAPP, PRODUCTOR } from '../config';
 import { linkWhatsApp } from '../utils/whatsapp';
 
 const BENEFICIOS = [
@@ -19,7 +20,6 @@ export default function Hero({
 }) {
   return (
     <section className="relative z-20 overflow-x-clip">
-      {/* Textura editorial sutil y halos ambientales */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 bg-editorial-grid [mask-image:radial-gradient(ellipse_78%_70%_at_50%_25%,#000_30%,transparent_100%)]"
@@ -39,13 +39,10 @@ export default function Hero({
           <div className="order-1 lg:col-span-6 lg:pt-3 space-y-3.5 sm:space-y-4 animate-hero-in">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-sm border border-stone-300/80 shadow-[0_2px_10px_-4px_rgba(15,23,42,0.08)] text-[#1E567C] text-[11px] sm:text-xs font-bold tracking-wide uppercase">
               <span className="w-1.5 h-1.5 rounded-full bg-[#6DA6C9]" aria-hidden="true" />
-              <span>Seguros de Autos y Motos · Córdoba</span>
+              <span>Seguros de Autos y Motos · {PRODUCTOR.zona}</span>
             </div>
 
-            <h1
-              key={ramo}
-              className="text-[30px] sm:text-4xl lg:text-[46px] font-serif-brand font-bold text-[#0F172A] leading-[1.1] tracking-tight animate-field-in"
-            >
+            <h1 className="text-[30px] sm:text-4xl lg:text-[46px] font-serif-brand font-bold text-[#0F172A] leading-[1.1] tracking-tight">
               {ramo === 'auto'
                 ? 'Cotizá el seguro de tu auto '
                 : 'Cotizá el seguro de tu moto '}
@@ -98,17 +95,19 @@ export default function Hero({
               {BENEFICIOS.map((texto) => (
                 <li key={texto} className="flex items-center gap-3">
                   <span className="w-6 h-6 rounded-full bg-[#21699B]/10 ring-1 ring-[#21699B]/15 text-[#21699B] flex items-center justify-center shrink-0">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <CheckCircle2 aria-hidden="true" className="w-3.5 h-3.5" />
                   </span>
                   <span>{texto}</span>
                 </li>
               ))}
             </ul>
 
-            {/* Sello humano del productor matriculado */}
             <div className="flex items-center gap-3 bg-white/85 backdrop-blur-sm border border-stone-200/90 rounded-2xl px-4 py-3 shadow-[0_4px_16px_-8px_rgba(15,23,42,0.08)] max-w-md">
               <div className="relative shrink-0">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#0F172A] to-[#1E3A5F] text-white font-serif-brand font-bold text-sm flex items-center justify-center shadow-xs">
+                <div
+                  aria-hidden="true"
+                  className="w-10 h-10 rounded-full bg-gradient-to-br from-[#0F172A] to-[#1E3A5F] text-white font-serif-brand font-bold text-sm flex items-center justify-center shadow-xs"
+                >
                   MY
                 </div>
                 <span
@@ -123,29 +122,28 @@ export default function Hero({
                   {PRODUCTOR.nombreCompleto}
                 </p>
                 <p className="text-[11px] text-slate-600 truncate">
-                  Productor Asesor Matriculado · SSN {PRODUCTOR.matricula} · Córdoba
+                  Productor Asesor Matriculado · SSN {PRODUCTOR.matricula} · {PRODUCTOR.zona}
                 </p>
               </div>
             </div>
 
             <div className="pt-0.5 hidden lg:block">
-              <a
-                href={linkWhatsApp(
-                  'Hola! Te mando foto de mi póliza actual para ver si podemos mejorar el precio o la cobertura.'
-                )}
-                target="_blank"
-                rel="noreferrer"
+              <ExternalLink
+                href={linkWhatsApp(MENSAJES_WHATSAPP.revisarPoliza)}
                 className="inline-flex items-center gap-3.5 bg-white/95 hover:bg-white border border-stone-300/80 hover:border-[#6DA6C9] rounded-2xl p-3.5 pr-4 shadow-[0_4px_16px_-6px_rgba(15,23,42,0.08)] hover:shadow-[0_12px_28px_-10px_rgba(33,105,155,0.22)] hover:-translate-y-0.5 transition-all duration-200 group"
               >
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#21699B]/15 to-[#6DA6C9]/20 text-[#21699B] flex items-center justify-center shrink-0 ring-1 ring-[#21699B]/10">
-                  <FileText className="w-4 h-4" />
+                  <FileText aria-hidden="true" className="w-4 h-4" />
                 </div>
                 <div className="text-xs leading-snug">
                   <span className="font-bold text-slate-900 block">¿Ya tenés seguro y pagás caro?</span>
                   <span className="text-slate-600">Mandanos foto de tu póliza y mejoramos el costo</span>
                 </div>
-                <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-[#21699B] group-hover:translate-x-1 transition-all" />
-              </a>
+                <ChevronRight
+                  aria-hidden="true"
+                  className="w-4 h-4 text-slate-500 group-hover:text-[#21699B] group-hover:translate-x-1 transition-all"
+                />
+              </ExternalLink>
             </div>
           </div>
         </div>

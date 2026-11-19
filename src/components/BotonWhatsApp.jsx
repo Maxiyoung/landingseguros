@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { MessageCircle, Calculator } from 'lucide-react';
+import { MENSAJES_WHATSAPP } from '../config';
 import { linkWhatsApp } from '../utils/whatsapp';
+import ExternalLink from './ui/ExternalLink';
 
 export default function BotonWhatsApp({ onIrAlCotizador }) {
   const [mostrarAtajoCotizador, setMostrarAtajoCotizador] = useState(false);
@@ -16,7 +18,10 @@ export default function BotonWhatsApp({ onIrAlCotizador }) {
   }, []);
 
   return (
-    <div className="fixed bottom-4 sm:bottom-5 right-4 sm:right-5 z-50 flex items-center gap-2.5">
+    <aside
+      aria-label="Accesos rápidos de contacto"
+      className="fixed bottom-4 sm:bottom-5 right-4 sm:right-5 z-50 flex items-center gap-2.5"
+    >
       <button
         type="button"
         onClick={onIrAlCotizador}
@@ -28,26 +33,24 @@ export default function BotonWhatsApp({ onIrAlCotizador }) {
             : 'opacity-0 translate-y-3 scale-95 pointer-events-none'
         }`}
       >
-        <Calculator className="w-4 h-4 text-[#6DA6C9]" />
+        <Calculator aria-hidden="true" className="w-4 h-4 text-[#6DA6C9]" />
         <span>Ir al Cotizador ↑</span>
       </button>
 
-      <a
-        href={linkWhatsApp('Hola! Quiero hacer una consulta sobre seguros.')}
-        target="_blank"
-        rel="noreferrer"
+      <ExternalLink
+        href={linkWhatsApp(MENSAJES_WHATSAPP.consultaGeneral)}
         aria-label="Chatear por WhatsApp"
-        className="relative group bg-gradient-to-br from-[#25D366] to-[#1DB954] hover:from-[#22C55E] hover:to-[#18A34A] text-white p-3.5 sm:px-4 sm:py-3.5 rounded-full shadow-[0_12px_28px_-6px_rgba(37,211,102,0.55)] hover:shadow-[0_16px_34px_-6px_rgba(37,211,102,0.65)] hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2"
+        className="relative group bg-[#25D366] hover:bg-[#1EBE5D] text-[#0F172A] p-3.5 sm:px-4 sm:py-3.5 rounded-full shadow-[0_12px_28px_-6px_rgba(37,211,102,0.45)] hover:shadow-[0_16px_34px_-6px_rgba(37,211,102,0.58)] hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2"
       >
         <span
           aria-hidden="true"
           className="motion-safe:animate-ping absolute inset-0 rounded-full bg-[#25D366] opacity-20 pointer-events-none"
         />
-        <MessageCircle className="relative w-6 h-6 fill-white shrink-0" />
-        <span className="relative hidden sm:inline text-xs font-bold tracking-wide pr-1">
+        <MessageCircle aria-hidden="true" className="relative w-6 h-6 text-[#0F172A] shrink-0" />
+        <span className="relative hidden sm:inline text-xs font-extrabold tracking-wide pr-1">
           WhatsApp Directo
         </span>
-      </a>
-    </div>
+      </ExternalLink>
+    </aside>
   );
 }
