@@ -44,10 +44,10 @@ export default function Hero({
 
             <h1 className="text-[30px] sm:text-4xl lg:text-[46px] font-serif-brand font-bold text-[#0F172A] leading-[1.1] tracking-tight">
               {ramo === 'auto'
-                ? 'Cotizá el seguro de tu auto '
-                : 'Cotizá el seguro de tu moto '}
+                ? 'Tu cotización de auto '
+                : 'Tu cotización de moto '}
               <span className="relative inline-block italic font-semibold text-[#21699B] whitespace-nowrap">
-                en 1 minuto.
+                en el día,
                 <svg
                   aria-hidden="true"
                   viewBox="0 0 220 12"
@@ -62,7 +62,8 @@ export default function Hero({
                     strokeLinecap="round"
                   />
                 </svg>
-              </span>
+              </span>{' '}
+              entre varias compañías.
             </h1>
 
             <p className="text-sm sm:text-[17px] text-slate-700 leading-relaxed max-w-md pt-0.5">
